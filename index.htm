@@ -6,21 +6,28 @@
   <head>  
     <link rel="stylesheet" type="text/css" media="screen, handheld" href="style.css" />
     <script src="jquery-1.9.1.min.js" type="text/javascript"></script>
-    <script src="ui.js" type="text/javascript"></script>
     <script type="text/javascript" src="jwplayer.js" ></script>
+    <script src="https://www.parsecdn.com/js/parse-1.2.18.min.js"></script>
+    <script src="ui.js" type="text/javascript"></script>
     <script>jwplayer.key=""</script>
   </head>
 
   <body>
 
     <div id="player"></div>
-    <input type="text" id="stream" value="rtmp://129.105.32.138:1935/live/test.sdp"></input>
+    <input type="text" id="stream" value="rtmp://glass.ci.northwestern.edu/live/test.sdp"></input>
 
     <button id="start">Start</button>
     <button id="stop">Stop</button>
 
-    <div id="status">hello</div>
-    <video> This is where the video is. </video>
+    <div id="status"></div>
+    <button> Click me to record audio! </button>
+
+    <br/>
+    Send text: <input type="text" id="message" value="Turn left!">
+    <input id="submit" onclick="changeMessage()" type="submit">
+  
+    
 
   </body>
 

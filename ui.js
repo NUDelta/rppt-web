@@ -11,10 +11,7 @@
         }
     }
 
-    function hasGetUserMedia() {
-      return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
-                navigator.mozGetUserMedia || navigator.msGetUserMedia);
-    }
+
 
     $(document).ready(function () {
 
@@ -29,42 +26,16 @@
         });
 
 
-        // Microphone
-        if (hasGetUserMedia()) {
-            $('#status').append("YES").show();
-        }
-        else {
-            // do error stuff
-            $('#status').append("Microphone not supported.").show();
-        }
+        // // Microphone
+        // navigator.getUserMedia({audio:true}, function(stream) {
+        //   console.log("Got it.");
+        // }, function(e) {
+        //         alert('Error getting audio');
+        //         console.log(e);
+        //     });
 
-        navigator.getUserMedia = ( navigator.getUserMedia ||
-                               navigator.webkitGetUserMedia ||
-                               navigator.mozGetUserMedia ||
-                               navigator.msGetUserMedia);
-        navigator.getUserMedia (
-
-           // constraints
-           {
-              video: true,
-              audio: true
-           },
-
-           // successCallback
-           function(localMediaStream) {
-              var video = document.querySelector('video');
-              video.src = window.URL.createObjectURL(localMediaStream);
-              video.onloadedmetadata = function(e) {
-                 // Do something with the video here.
-              };
-           },
-
-           // errorCallback
-           function(err) {
-            console.log("The following error occured: " + err);
-           }
-
-        );
+        // Parse Logic
+        Parse.initialize("3dgBmw9ZzGVprNrdoNuQZ4TgmWzjkc8rc5HT3quP", "zFyHtXjR0PTbeqCNgSVMJgiMndBWVEi4Qu8F1I1y");
     });
 
 
@@ -99,3 +70,36 @@
     }
 
 }(jQuery));
+
+function changeMessage() {
+    var word = $("#message").val();
+    var messageObject = Parse.Object.extend("message");
+    var messageQuery = new Parse.Query(messageObject);
+
+    messageQuery.find({
+        success: function(results) {
+            console.log("found something");
+            if (results.length == 0) {
+                var message = new messageObject();
+                console.log("making new object");
+            }
+            else {
+                var message = results[0]
+                console.log("overwritting time");
+            }
+            console.log(word)
+            message.set("msg", word);
+            message.save(null, {
+                success: function(results) {
+                    console.log("nice job!");
+                },
+                error: function(results) {
+                    console.log("sad face");
+                }
+            })
+        },
+        error: function(error) {
+            console.log("found nothing");
+        }
+    });
+}

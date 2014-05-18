@@ -1,3 +1,7 @@
 input {
     width: 500px;
 }
+
+#submit {
+	width: 80px;
+}
