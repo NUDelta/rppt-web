@@ -39,6 +39,7 @@
 	height: 200px;
 	width: 434px;
 	display: inline-block;
+	text-align: left;
 }
 
 #connect-info {
