@@ -14,4 +14,6 @@ Brief Notes:
  	- ForeverJS
  	- Apache?
 
- setInner Html text -- can change HTML code
+ Updates:
+ 5/28/2014: set up a basic chat history and recenter the map every 5 seconds. Want to drop a pin at some point on the user's location, trace their path (?), and set up a proper chat history (scrolling).
+
