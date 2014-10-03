@@ -1,4 +1,4 @@
-prototype-cc
+remote-paper-prototyper-web
 ============
 
 Web command-center style interface for our remote prototyping application. A prototyping facilitator watches this interface to see what the user tester is doing and communicates back via text.
