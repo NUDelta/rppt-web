@@ -9,3 +9,10 @@
     margin-left: 30px;
     width: 320px;
 }
+
+#map {
+    margin-top: 90px;
+    width: 350px;
+    height: 250px;
+    display: inline-block;
+}
