@@ -16,3 +16,16 @@
     height: 250px;
     display: inline-block;
 }
+/* current displaced by size of circle */
+#tap-indicator {
+    height: 30px;
+    width: 30px;
+    border-radius: 15px;
+    background-color: blue;
+    opacity: 0.4;
+    z-index: 1234;
+    position: relative;
+    top: -460px;
+    left: 0px;
+    display: none;
+}
