@@ -10,7 +10,7 @@ Template.paperStream.rendered = function () {
         // make sure resolution matches iphone
         var properties = {height: 460, width: 320, name: "Paper Stream", mirror: false}
         var publisher = OT.initPublisher('publisher', properties);
-        // publisher.setStyle("backgroundImageURI", "string")
+        // publisher.setStyle("backgroundImageURI", "stickies.jpg"); not working
         session.publish(publisher);
     });
 

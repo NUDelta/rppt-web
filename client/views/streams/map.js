@@ -19,7 +19,7 @@ function getLocation() {
             }
             if (lat != "??") {
                 var loc = new google.maps.LatLng(lat, lon);
-                if (map == 1234) {
+                if (map == null) {
                     initMap(loc);
                 }
                 map.setCenter(loc);
