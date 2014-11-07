@@ -1,2 +1,2 @@
 Sessions = new Meteor.Collection('sessions');
-Taps = new Meteor.Collection('taps');
+Gestures = new Meteor.Collection('gestures');
