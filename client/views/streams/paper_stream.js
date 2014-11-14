@@ -8,7 +8,7 @@ Template.paperStream.rendered = function () {
 
     session.connect(token, function(error) {
         // make sure resolution matches iphone
-        var properties = {height: 460, width: 320, name: "Paper Stream", mirror: false}
+        var properties = {height: 460, width: 320, name: "Paper Stream", mirror: false, style: {audioLevelDisplayMode: "on", buttonDisplayMode: "on"}};
         var publisher = OT.initPublisher('publisher', properties);
         // publisher.setStyle("backgroundImageURI", "stickies.jpg"); not working
         session.publish(publisher);

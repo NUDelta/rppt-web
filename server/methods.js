@@ -11,5 +11,15 @@ Meteor.methods({
 
   clearAllGestures: function() {
     Gestures.remove({});
+  },
+
+  setNewTask: function(task) {
+    Messages.remove({});
+    var taskEntry = {"type": "task", "content": task};
+    Messages.insert(taskEntry);
+  },
+
+  returnNewTask: function() {
+    return Messages.findOne()["content"];
   }
 });
