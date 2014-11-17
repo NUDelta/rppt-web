@@ -15,39 +15,59 @@ Template.cc.rendered = function () {
             }
         }
     });
+
+    tapCounter = 0;
 };
 
-function showTap(params) {
-    var offset = 15; // from CSS
+// function showTap(params) {
+//     var offset = 15; // from CSS
     
-    x = params["x"] - offset;
-    y = params["y"] - offset - 460;
+//     x = params["x"] - offset;
+//     y = params["y"] - offset - 460;
 
-    $("#tap-indicator").css("left", x);
-    $("#tap-indicator").css("top", y);
-    $("#tap-indicator").show()
+//     $("#tap-indicator").css("left", x);
+//     $("#tap-indicator").css("top", y);
+//     $("#tap-indicator").show()
 
-    // setTimeout(function() { resetTap(); }, 800);
+//     // setTimeout(function() { resetTap(); }, 800);
+// }
+
+function showTap(params) {
+    x = params["x"];
+    y = params["y"];
+    var id  = createTap(x, y)
+    setTimeout(function() { resetTap(id); }, 500);
+}
+
+function createTap(x, y) {
+    var offset = 30;
+
+    var div = document.createElement("div");
+    div.style.width = "30px";
+    div.style.height = "30px";
+    div.style.background = "blue";
+    div.style.borderRadius = "15px";
+    div.style.opacity = 0.6;
+    div.style.zIndex = 1234;
+    div.style.position = "absolute";
+    div.style.left = (x + offset).toString() + "px";
+    div.style.top = (y + offset).toString() + "px";
+    div.setAttribute("id", "tapIcon" + tapCounter.toString());
+    tapCounter += 1;
+
+    $("#paper-wrapper").append(div);
+    return tapCounter - 1;
 }
 
 function showPan(params) {
-    panning = true;
+    var xshifted = x + params["x"];
+    var yshifted = y + params["y"];
 
-    xshifted = x + params["x"];
-    yshifted = y + params["y"];
+    var id = createTap(xshifted, yshifted);
 
-    $("#tap-indicator").css("left", xshifted);
-    $("#tap-indicator").css("top", yshifted);
-
-    panning = false;
-    // setTimeout(function() {
-    //     if (!panning)
-    //         resetTap();
-    // }, 800);
+    setTimeout(function() { resetTap(id); }, 500);
 }
 
-function resetTap() {
-    $("#tap-indicator").hide();
-    $("#tap-indicator").css("left", 0);
-    $("#tap-indicator").css("top", -460);
+function resetTap(divID) {
+    $("#" + "tapIcon" + divID).remove();
 }
