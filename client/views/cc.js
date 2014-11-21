@@ -4,6 +4,7 @@ Template.cc.rendered = function () {
     map = null;
     panning = false;
 
+    Meteor.call("setNewTask", "Waiting for your first task...");
     Meteor.call("clearAllGestures");
     Gestures.find().observeChanges({
         added: function (id, fields) {

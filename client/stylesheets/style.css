@@ -1,17 +1,37 @@
-.col-md-6 {
+body {
+    font-family: Raleway, Arial, sans-serif;
     text-align: center;
+}
+
+h3 {
+    color: #696969;
+}
+
+form {
+    width: 80%;
+    margin: 60px auto 0px auto;
 }
 
 #glass-wrapper {
     margin-top: 10px;
     margin-left: 30px;
-    width: 540px;
+}
+
+#subscriber {
+    width: 480;
+    height: 320px;
+    outline: 2px dashed #696969;
 }
 
 #paper-wrapper {
     margin-top: 45px;
     margin-left: 30px;
+}
+
+#publisher {
     width: 320px;
+    height: 460px;
+    outline: 2px dashed #696969;
 }
 
 #map {
@@ -32,12 +52,6 @@
     top: -460px;
     left: 0px;
     display: none;
-}
-
-form {
-    width: 80%;
-    font-family: Raleway, Arial, sans-serif;
-    margin: 60px auto 0px auto;
 }
 
 #newTask {
