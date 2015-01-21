@@ -20,19 +20,6 @@ Template.cc.rendered = function () {
     tapCounter = 0;
 };
 
-// function showTap(params) {
-//     var offset = 15; // from CSS
-    
-//     x = params["x"] - offset;
-//     y = params["y"] - offset - 460;
-
-//     $("#tap-indicator").css("left", x);
-//     $("#tap-indicator").css("top", y);
-//     $("#tap-indicator").show()
-
-//     // setTimeout(function() { resetTap(); }, 800);
-// }
-
 function showTap(params) {
     x = params["x"];
     y = params["y"];

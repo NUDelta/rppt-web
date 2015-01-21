@@ -8,3 +8,4 @@
 // 	Sessions.save({'session': session.sessionId});
 // })
 
+Sessions.remove({});
