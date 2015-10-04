@@ -24,3 +24,5 @@ The RPPT web app consists of a single webpage containing both the Google Glass s
  * Fix positioning of dot trails
  * Make consistent integer or string API key
  * refactor collections
+ * set location to be updated by iOS application
+ * setup sync codes

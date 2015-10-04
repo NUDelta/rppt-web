@@ -1,3 +1,4 @@
+aspin:tokbox@2.3.0
 autopublish@1.0.4
 autoupdate@1.2.3
 babel-compiler@5.8.24_1
@@ -11,7 +12,6 @@ boilerplate-generator@1.0.4
 caching-compiler@1.0.0
 caching-html-compiler@1.0.2
 callback-hook@1.0.4
-carlodicelico:tokbox@2.2.8
 check@1.0.6
 ddp@1.2.2
 ddp-client@1.2.1

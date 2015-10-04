@@ -6,7 +6,7 @@ Template.taskSetter.events({
         var newTask = $('#newTask').val();
         Meteor.call('setNewTask', newTask);
 
-        $('#success').animate({opacity:1});        
-        setTimeout(function () { $('#success').animate({opacity:0}); }, 3000);
+        $('#success').animate({ opacity: 1 });
+        setTimeout(function() { $('#success').animate({ opacity: 0 }); }, 3000);
     }
 });

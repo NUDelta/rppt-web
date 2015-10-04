@@ -8,7 +8,6 @@ insecure
 
 
 iron:router
-carlodicelico:tokbox
 standard-minifiers
 meteor-base
 mobile-experience
@@ -24,3 +23,5 @@ ejson
 spacebars
 check
 twbs:bootstrap
+ecmascript
+aspin:tokbox

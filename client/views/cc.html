@@ -1,24 +1,18 @@
 <template name="cc">
 
-  <div class="container-fluid">
-    <div class="row">
-
-
-      <div class="col-md-6" style="width: 43%">
+  <div class="full-page">
+    <div class="content">
+      <div class="col-md-5">
         {{> taskSetter}}
         {{> alert}}
-        <div id="glass-wrapper">
-          {{> glassStream}}
-        </div>
+        {{> glassStream}}
       </div>
 
-      <div class="col-md-4" style="width: 28%">
-        <div id="paper-wrapper">
-          {{> paperStream}}
-        </div>
+      <div class="col-md-4">
+        {{> paperStream}}
       </div>
 
-      <div class="col-md-2" style="width: 27%">
+      <div class="col-md-3">
         {{> map}}
       </div>
 
