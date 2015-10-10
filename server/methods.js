@@ -1,65 +1,71 @@
 Meteor.methods({
-  createTap: function(tapObject) {
-    let tapAction = {'done': false, 'action': 'tap', 'params': tapObject};
-    Gestures.insert(tapAction);
-  },
+    // Web Methods
+    webCreateStream: function(session, role) {
+        let cred = {};
+        cred.stream = openTokClient.createSession();
+        cred.token = openTokClient.generateToken(cred.stream, { role: role });
+        cred.key = key;
 
-  panUpdate: function(panObject) {
-    let panUpdate = {'done': false, 'action': 'pan', 'params': panObject};
-    Gestures.insert(panUpdate);
-  },
+        console.log(`[webCreateStream]: Called as a ${role}. Creating stream.`);
+        console.log(`[webCreateStream]: Session: ${cred.stream}`);
+        console.log(`[webCreateStream]: Token: ${cred.token}`);
+        Streams.insert({ session: session, streamId: cred.stream, role: role });
+        return cred;
+    },
 
-  clearAllGestures: function() {
-    Gestures.remove({});
-  },
+    // Mobile Methods
+    getStreamData: function(session, role) {
+        let rerole = invertRole(role),
+        stream = Streams.findOne({ session: session, role: rerole }),
+        cred = {};
 
-  setNewTask: function(task) {
-    Messages.remove({});
-    let taskEntry = {'type': 'task', 'content': task};
-    Messages.insert(taskEntry);
-  },
+        cred.session = stream.streamId;
+        cred.token = openTokClient.generateToken(stream.streamId, { role: role });
+        cred.key = key;
 
-  returnNewTask: function() {
-    return Messages.findOne().content;
-  },
+        console.log(`[getSession]: Called as a ${role}. Returning data.`);
+        console.log(`[getSession]: Session: ${cred.session}`);
+        console.log(`[getSession]: Token: ${cred.token}`);
+        console.log(`[getSession]: Key: ${cred.key}`);
+        Streams.remove(stream);
+        return cred;
+    },
 
-  // This should only be called by web client.
-  createSession: function(role) {
-    console.log('[createSession]: Called as a ' + role + '. Creating session.');
-    let cred = {};
-    let session = openTokClient.createSession();
-    let token = openTokClient.generateToken(session, { role: role });
-    cred.session = session;
-    cred.token = token;
-    cred.key = key;
-    console.log('[createSession]: Session: ' + cred.session);
-    console.log('[createSession]: Token: ' + cred.token);
-    console.log('[createSession]: Key: ' + cred.key);
-    Sessions.insert({session: session, role: role});
-    return cred;
-  },
+    // Gesture Handling
+    createTap: function(tapObject) {
+        let tapAction = { 'done': false, 'action': 'tap', 'params': tapObject };
+        Gestures.insert(tapAction);
+    },
 
-  getSession: function(role) {
-    console.log('[getSession]: Called as a ' + role + '. Returning data.');
-    let rerole = invertRole(role);
-    let session = Sessions.findOne({role: rerole});
-    let cred = {};
-    cred.session = session.session;
-    cred.token = openTokClient.generateToken(session.session, { role: role });
-    cred.key = key;
-    console.log('[getSession]: Session: ' + cred.session);
-    console.log('[getSession]: Token: ' + cred.token);
-    console.log('[getSession]: Key: ' + cred.key);
-    // Sessions.remove({_id: session});
-    return cred;
-  },
+    panUpdate: function(panObject) {
+        let panUpdate = { 'done': false, 'action': 'pan', 'params': panObject };
+        Gestures.insert(panUpdate);
+    },
+
+    clearGestures: function(session) {
+        Gestures.remove({ session: session });
+    },
+
+    // Task Handling
+    createTaskEntry: function(session) {
+        Messages.remove({ session: session });
+        Messages.insert({ session: session, type: 'task', content: 'Waiting for your first task...'});
+    },
+
+    getTaskId: function(session) {
+        return Messages.findOne({ session: session });
+    },
+
+    updateTask: function(session, task) {
+        Messages.update({ session: session }, { $set: { content: task } });
+    },
 });
 
 function invertRole(role) {
-  if (role == 'publisher') {
-    return 'subscriber';
-  }
-  else {
-    return 'publisher';
-  }
+    if (role == 'publisher') {
+        return 'subscriber';
+    }
+    else {
+        return 'publisher';
+    }
 }

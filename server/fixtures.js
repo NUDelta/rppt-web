@@ -1,1 +1,1 @@
-Sessions.remove({});
+Streams.remove({});

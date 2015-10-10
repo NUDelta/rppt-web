@@ -1,15 +1,22 @@
 Template.paperStream.rendered = function () {
-
-    Meteor.call('createSession', 'publisher', function(err, res) {
+    Meteor.call('webCreateStream', session, 'publisher', function(err, cred) {
         if (err) {
-            console.log(err);
+            alert(err);
         } else {
-            var session = OT.initSession(res.key, res.session);
-            session.connect(res.token, function(err) {
-                var properties = {height: 460, width: 320, name: 'Paper Stream', mirror: false, style: {audioLevelDisplayMode: "on", buttonDisplayMode: "on"}};
-                var publisher = OT.initPublisher('publisher', properties);
-                session.publish(publisher);
-
+            let stream = OT.initSession(cred.key, cred.stream);
+            stream.connect(cred.token, function(err) {
+                let properties = {
+                        height: 460,
+                        width: 320,
+                        name: 'Paper Stream',
+                        mirror: false,
+                        style: {
+                            audioLevelDisplayMode: 'on',
+                            buttonDisplayMode: 'on'
+                        }
+                    },
+                    publisher = OT.initPublisher('publisher', properties);
+                stream.publish(publisher);
                 $('#publisher').css('outline', 'none');
             });
         }

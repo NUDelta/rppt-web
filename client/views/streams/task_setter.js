@@ -3,8 +3,8 @@ Template.taskSetter.events({
         e.preventDefault();
         e.stopPropagation();
 
-        var newTask = $('#newTask').val();
-        Meteor.call('setNewTask', newTask);
+        let task = e.currentTarget.task.value;
+        Meteor.call('updateTask', session, task);
 
         $('#success').animate({ opacity: 1 });
         setTimeout(function() { $('#success').animate({ opacity: 0 }); }, 3000);
