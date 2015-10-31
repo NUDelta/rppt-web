@@ -1,22 +1,29 @@
 <template name="cc">
 
-  <div class="full-page">
-    <div class="content">
-      <div class="col-md-5">
-        {{> taskSetter}}
-        {{> alert}}
-        {{> glassStream}}
-      </div>
-
-      <div class="col-md-4">
+  <div class="container-fluid full-height">
+    <div class="row full-height">
+      <div class="col-md-4 center-content full-height">
         {{> paperStream}}
       </div>
-
-      <div class="col-md-3">
+      <div class="col-md-5 center-content full-height">
+        <div>
+          {{> taskSetter}}
+          {{> alert}}
+          {{> glassStream}}
+          <h1>Key:
+            <strong>
+            {{#if sessionKey}}
+              {{sessionKey}}
+            {{else}}
+              [consumed]
+            {{/if}}
+            </strong>
+          </h1>
+        </div>
+      </div>
+      <div class="col-md-3 center-content full-height">
         {{> map}}
       </div>
-
     </div>
   </div>
-
 </template>

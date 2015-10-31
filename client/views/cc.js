@@ -2,25 +2,37 @@ session = createSession();
 let panning = false;
 
 Template.cc.onRendered(function() {
-    Meteor.call('createTaskEntry', session);
-    Meteor.call('clearGestures', session);
-    // Gestures.find({ session: session }).observeChanges({
-    //     added: function (id, fields) {
-    //         if (fields['action'] == 'tap') {
-    //             showTap(fields['params']);
-    //         } else if (fields['action'] == 'pan') {
-    //             showPan(fields['params']);
-    //         }
-    //     }
-    // });
-    //
-    // tapCounter = 0;
+  Meteor.call('createTaskEntry', session);
+  Meteor.call('clearGestures', session);
+
+  // Handle this via subscriptions
+  // Gestures.find({ session: session }).observeChanges({
+  //     added: function (id, fields) {
+  //         if (fields['action'] == 'tap') {
+  //             showTap(fields['params']);
+  //         } else if (fields['action'] == 'pan') {
+  //             showPan(fields['params']);
+  //         }
+  //     }
+  // });
+  //
+  // tapCounter = 0;
 });
 
 // Generate session key strings
 function createSession() {
-    return 'hello'
+  return 'hello'
 }
+
+Template.cc.helpers({
+  sessionKey: function() {
+    if (Streams.findOne({ session: session })) {
+      return session;
+    } else {
+      return "";
+    }
+  }
+});
 
 
 // function showTap(params) {
