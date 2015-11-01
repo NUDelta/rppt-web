@@ -40,11 +40,27 @@ form input[type=text] {
   text-align: center;
 }
 
+.tap-indicator {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background-color: blue;
+  border-radius: 15px;
+  opacity: 0.6;
+  z-index: 1234;
+  transform: translate(-50%, -50%);
+}
+
 #subscriber {
   width: 480px;
   height: 320px;
   outline: 2px dashed #696969;
   margin: 0 auto 50px auto;
+}
+
+#paper-wrapper {
+  margin: auto;
+  position: relative;
 }
 
 #publisher {

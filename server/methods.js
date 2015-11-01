@@ -32,13 +32,13 @@ Meteor.methods({
     },
 
     // Gesture Handling
-    createTap: function(tapObject) {
-        let tapAction = { 'done': false, 'action': 'tap', 'params': tapObject };
+    createTap: function(session, x, y) {
+        let tapAction = { session: session, done: false, action: 'tap', x: x, y: y };
         Gestures.insert(tapAction);
     },
 
     panUpdate: function(panObject) {
-        let panUpdate = { 'done': false, 'action': 'pan', 'params': panObject };
+        let panUpdate = { done: false, action: 'pan', params: panObject };
         Gestures.insert(panUpdate);
     },
 
