@@ -21,8 +21,9 @@ The RPPT web app consists of a single webpage containing both the Google Glass s
 ## Developer To-do List
 * [ ] Merge projects into one repository
 * [ ] Fix CSS styling of dashboard
-* [ ] Fix positioning of dot trails
+* [x] Fix positioning of dot trails
 * [ ] Make consistent integer or string API key
 * [ ] refactor collections
+* [ ] auto cleanup stream data
 * [x] set location to be updated by iOS application
-* [ ] setup sync codes
+* [x] setup sync codes

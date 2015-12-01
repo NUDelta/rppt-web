@@ -37,11 +37,6 @@ Meteor.methods({
         Gestures.insert(tapAction);
     },
 
-    panUpdate: function(panObject) {
-        let panUpdate = { done: false, action: 'pan', params: panObject };
-        Gestures.insert(panUpdate);
-    },
-
     clearGestures: function(session) {
         Gestures.remove({ session: session });
     },

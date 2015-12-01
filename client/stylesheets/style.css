@@ -25,6 +25,10 @@ h3 {
   width: 100%;
 }
 
+.text-green {
+  color: green;
+}
+
 form {
   width: 80%;
   margin: 60px auto 0px auto;

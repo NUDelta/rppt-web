@@ -10,12 +10,12 @@
           {{> taskSetter}}
           {{> alert}}
           {{> glassStream}}
-          <h1>Key:
+          <h1>
             <strong>
             {{#if sessionKey}}
-              {{sessionKey}}
+              iOS Key: {{sessionKey}}
             {{else}}
-              [consumed]
+              <span class="text-green">connected</span>
             {{/if}}
             </strong>
           </h1>
