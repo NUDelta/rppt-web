@@ -5,6 +5,7 @@ let panning = false,
 Template.cc.onRendered(function() {
   Meteor.call('createTaskEntry', session);
   Meteor.call('clearGestures', session);
+  $('#qr-code').qrcode({ text: session });
 
   // Handle this via subscriptions
   Gestures.find({ session: session }).observeChanges({

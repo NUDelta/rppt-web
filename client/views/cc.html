@@ -13,7 +13,7 @@
           <h1>
             <strong>
             {{#if sessionKey}}
-              iOS Key: {{sessionKey}}
+              stream key: {{sessionKey}}
             {{else}}
               <span class="text-green">connected</span>
             {{/if}}
@@ -22,7 +22,10 @@
         </div>
       </div>
       <div class="col-md-3 center-content full-height">
-        {{> map}}
+        <div>
+          {{> map}}
+          <div id="qr-code"></div>
+        </div>
       </div>
     </div>
   </div>

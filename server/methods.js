@@ -19,16 +19,20 @@ Meteor.methods({
         stream = Streams.findOne({ session: session, role: rerole }),
         cred = {};
 
-        cred.session = stream.streamId;
-        cred.token = openTokClient.generateToken(stream.streamId, { role: role });
-        cred.key = key;
+        try {
+            cred.session = stream.streamId;
+            cred.token = openTokClient.generateToken(stream.streamId, { role: role });
+            cred.key = key;
 
-        console.log(`[getSession]: Called as a ${role}. Returning data.`);
-        console.log(`[getSession]: Session: ${cred.session}`);
-        console.log(`[getSession]: Token: ${cred.token}`);
-        console.log(`[getSession]: Key: ${cred.key}`);
-        Streams.remove(stream);
-        return cred;
+            console.log(`[getSession]: Called as a ${role}. Returning data.`);
+            console.log(`[getSession]: Session: ${cred.session}`);
+            console.log(`[getSession]: Token: ${cred.token}`);
+            console.log(`[getSession]: Key: ${cred.key}`);
+            Streams.remove(stream);
+            return cred;
+        } catch (exception) {
+            throw new Meteor.Error(exception.error, exception.reason);
+        }
     },
 
     // Gesture Handling
