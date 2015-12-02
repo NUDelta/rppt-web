@@ -5,7 +5,12 @@ let panning = false,
 Template.cc.onRendered(function() {
   Meteor.call('createTaskEntry', session);
   Meteor.call('clearGestures', session);
-  $('#qr-code').qrcode({ text: session });
+
+  let bg = new Image();
+  bg.src = 'imgs/delta_icon.png';
+  bg.onload = () => {
+    $('#qr-code').qrcode({ text: session, mode: 4, image: bg, mSize: 0.4 });
+  }
 
   // Handle this via subscriptions
   Gestures.find({ session: session }).observeChanges({
@@ -20,7 +25,9 @@ Template.cc.onRendered(function() {
 
 // Generate session key strings
 function createSession() {
-  return 'hello'
+  let max = 99999,
+      min = 10000;
+  return String(Math.floor(Math.random() * (max - min + 1)) + min);
 }
 
 Template.cc.helpers({

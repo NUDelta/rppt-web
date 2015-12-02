@@ -25,4 +25,4 @@ twbs:bootstrap
 ecmascript
 aspin:tokbox
 autopublish
-steeve:jquery-qrcode
+dschulz:jquery-qrcode
