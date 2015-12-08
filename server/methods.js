@@ -37,11 +37,19 @@ Meteor.methods({
     // Gesture Handling
     createTap: function(session, x, y) {
         let tapAction = { session: session, done: false, action: 'tap', x: x, y: y };
+        // console.log('gesture received');
         Gestures.insert(tapAction);
     },
 
     clearGestures: function(session) {
         Gestures.remove({ session: session });
+    },
+
+    clearSession: function(session) {
+        Gestures.remove({ session: session });
+        Messages.remove({ session: session });
+        Locations.remove({ session: session });
+        Streams.remove({ session: session });
     },
 
     // Task Handling

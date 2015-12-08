@@ -1,3 +1,7 @@
+Template.map.onCreated(function() {
+    this.subscribe('locations', session);
+});
+
 Template.map.rendered = function () {
     let mapOptions = { zoom: 18 },
         map = new google.maps.Map(document.getElementById('map'), mapOptions),

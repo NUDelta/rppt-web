@@ -19,11 +19,12 @@ Depending on your setup, you'll probably want to deploy your application to free
 The RPPT web app consists of a single webpage containing both the Google Glass stream (left), the expected paper stream (center), and a Google Maps map contain the user's location. You should connect a webcam to your computer connected to this RPPT server and point it at your paper prototype. Tap or swipe gestures from the iOS application, once connected, should be replicated as blue dots over top of this paper prototype stream.
 
 ## Developer To-do List
-* [ ] Merge projects into one repository
-* [ ] Fix CSS styling of dashboard
+* [x] Merge projects into one repository
+* [x] Fix CSS styling of dashboard
 * [x] Fix positioning of dot trails
-* [ ] Make consistent integer or string API key
-* [ ] refactor collections
+* [x] Make consistent integer or string API key
+* [x] refactor collections
 * [ ] auto cleanup stream data
+* [ ] better error handling
 * [x] set location to be updated by iOS application
 * [x] setup sync codes

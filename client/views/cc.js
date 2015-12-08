@@ -2,6 +2,10 @@ session = createSession();
 let panning = false,
     tapCounter = 0;
 
+Template.cc.onCreated(function() {
+   this.subscribe('gestures', session);
+});
+
 Template.cc.onRendered(function() {
   Meteor.call('createTaskEntry', session);
   Meteor.call('clearGestures', session);
@@ -13,7 +17,7 @@ Template.cc.onRendered(function() {
   }
 
   // Handle this via subscriptions
-  Gestures.find({ session: session }).observeChanges({
+  Gestures.find().observeChanges({
     added: function (id, fields) {
       if (fields.action == 'tap') {
         showTap(fields.x, fields.y);
@@ -25,11 +29,7 @@ Template.cc.onRendered(function() {
 
 Template.cc.helpers({
   sessionKey: function() {
-    if (Streams.findOne({ session: session })) {
-      return session;
-    } else {
-      return "";
-    }
+    return session;
   }
 });
 
@@ -38,6 +38,10 @@ function createSession() {
   let max = 99999,
       min = 10000;
   return String(Math.floor(Math.random() * (max - min + 1)) + min);
+}
+
+function clearSession() {
+  Meteor.call('clearSession', { session: session });
 }
 
 function showTap(x, y) {

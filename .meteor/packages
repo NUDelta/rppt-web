@@ -22,7 +22,5 @@ spacebars
 check
 ecmascript
 aspin:tokbox
-autopublish
 dschulz:jquery-qrcode
 materialize:materialize
-insecure
