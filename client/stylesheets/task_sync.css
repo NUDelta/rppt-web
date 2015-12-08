@@ -1,0 +1,18 @@
+form input[type=text] {
+  font-size: 1.2em;
+  text-align: center;
+}
+
+.alert {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 200px;
+  margin: auto;
+  top: 0;
+  opacity: 0;
+}
+
+#qr-code {
+  margin-top: 15px;
+}

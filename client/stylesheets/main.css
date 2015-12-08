@@ -1,0 +1,41 @@
+body {
+  background-color: #e8eaf6;
+  height: 100vh;
+}
+
+.stream-placeholder {
+  color: #696969;
+}
+
+.center-vertical {
+  display: flex;
+  align-items: center;
+}
+
+.full-height {
+  height: 100%;
+}
+
+.content {
+  position: relative;
+  width: 100%;
+  padding-top: 15%;
+}
+
+.content.padding {
+  padding: 15% 10% 25% 10%;
+}
+
+nav {
+  position: fixed;
+}
+
+.row {
+  margin-bottom: 0;
+}
+
+.attribution {
+  position: absolute;
+  right: 5%;
+  bottom: 5px;
+}

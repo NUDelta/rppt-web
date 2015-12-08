@@ -1,6 +1,7 @@
 <template name="taskSetter">
-  <form name="taskForm" autocomplete="off">
-    <input name="task" type="text" placeholder="What should the user tester be doing?" required/>
-    <input type="submit" style="display: none"/>
+  {{> alert}}
+  <form name="task-form" autocomplete="off">
+    <input name="task" type="text" placeholder="What should the user be doing?" required/>
+    <input type="submit" class="hide"/>
   </form>
 </template>

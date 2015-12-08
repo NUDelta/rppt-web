@@ -18,7 +18,6 @@ Meteor.methods({
         let rerole = invertRole(role),
         stream = Streams.findOne({ session: session, role: rerole }),
         cred = {};
-
         try {
             cred.session = stream.streamId;
             cred.token = openTokClient.generateToken(stream.streamId, { role: role });

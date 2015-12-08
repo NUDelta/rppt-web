@@ -1,32 +1,37 @@
 <template name="cc">
+  <nav>
+    <div class="nav-wrapper light-blue darken-2">
+      <a href="#" class="brand-logo center">Remote Paper Prototype Testing: Web Dashboard</a>
+    </div>
+  </nav>
 
-  <div class="container-fluid full-height">
-    <div class="row full-height">
-      <div class="col-md-4 center-content full-height">
-        {{> paperStream}}
-      </div>
-      <div class="col-md-5 center-content full-height">
+  <div class="row full-height">
+    <div class="col l3 center center-vertical full-height">
+      <div class="content padding">
+        {{> taskSetter}}
+        <div id="qr-code"></div>
         <div>
-          {{> taskSetter}}
-          {{> alert}}
-          {{> glassStream}}
-          <h1>
-            <strong>
-            {{#if sessionKey}}
-              stream key: {{sessionKey}}
-            {{else}}
-              <span class="text-green">connected</span>
-            {{/if}}
-            </strong>
-          </h1>
-        </div>
-      </div>
-      <div class="col-md-3 center-content full-height">
-        <div>
-          {{> map}}
-          <div id="qr-code"></div>
+          <h5>
+            Stream Key: <span class="amber-text text-darken-4">{{ sessionKey }}</span>
+          </h5>
         </div>
       </div>
     </div>
+
+    <div class="col l5 center center-vertical full-height">
+      <div class="content">
+        {{> glassStream}}
+        {{> map}}
+      </div>
+    </div>
+
+    <div class="col l4 center center-vertical full-height paper-col">
+      <div class="content">
+        {{> paperStream}}
+      </div>
+    </div>
+
+    <p class="blue-grey-text attribution">Created by <a href="http://kevinchen.ninja">Kevin Chen</a>, as part of <a href="http://haoqizhang.com">Prof. Haoqi Zhang</a>'s <a href="http://dtr.meteor.com">DTR</a> and <a href="http://delta.northwestern.edu">Delta Lab</a>.</p>
   </div>
+
 </template>

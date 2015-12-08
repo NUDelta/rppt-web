@@ -23,13 +23,6 @@ Template.cc.onRendered(function() {
   });
 });
 
-// Generate session key strings
-function createSession() {
-  let max = 99999,
-      min = 10000;
-  return String(Math.floor(Math.random() * (max - min + 1)) + min);
-}
-
 Template.cc.helpers({
   sessionKey: function() {
     if (Streams.findOne({ session: session })) {
@@ -40,6 +33,13 @@ Template.cc.helpers({
   }
 });
 
+// Generate session key strings
+function createSession() {
+  let max = 99999,
+      min = 10000;
+  return String(Math.floor(Math.random() * (max - min + 1)) + min);
+}
+
 function showTap(x, y) {
   let id  = createTap(x, y);
   setTimeout(function() { clearTap(id); }, 500);
@@ -48,9 +48,10 @@ function showTap(x, y) {
 function createTap(x, y) {
   let offset = 30,
       statusBarOffset = 20;
+  let leftRightOffset = ($('.paper-col .content').width() - 320) / 2;
 
   let div = document.createElement('div');
-  div.style.left = `${x}px`;
+  div.style.left = `${x + leftRightOffset}px`;
   div.style.top = `${y - statusBarOffset}px`;
   div.className = 'tap-indicator';
   div.setAttribute('id', `tapCircle${tapCounter}`);
