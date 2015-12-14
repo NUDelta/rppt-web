@@ -13,6 +13,10 @@ Meteor.methods({
         return cred;
     },
 
+    cleanUpStreams: function(session) {
+        Streams.remove({ session: session });
+    },
+
     // Mobile Methods
     getStreamData: function(session, role) {
         let rerole = invertRole(role),
@@ -27,7 +31,6 @@ Meteor.methods({
             console.log(`[getSession]: Session: ${cred.session}`);
             console.log(`[getSession]: Token: ${cred.token}`);
             console.log(`[getSession]: Key: ${cred.key}`);
-            Streams.remove(stream);
             return cred;
         } catch (exception) {
             throw new Meteor.Error(exception.error, exception.reason);

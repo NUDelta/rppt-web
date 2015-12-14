@@ -10,13 +10,16 @@ Template.cc.onRendered(function() {
   Meteor.call('createTaskEntry', session);
   Meteor.call('clearGestures', session);
 
+  $(window).bind('beforeunload', () => {
+    Meteor.call('cleanupStreams', session);
+  });
+
   let bg = new Image();
   bg.src = 'imgs/delta_icon.png';
   bg.onload = () => {
     $('#qr-code').qrcode({ text: session, mode: 4, image: bg, mSize: 0.1 });
   }
 
-  // Handle this via subscriptions
   Gestures.find().observeChanges({
     added: function (id, fields) {
       if (fields.action == 'tap') {
