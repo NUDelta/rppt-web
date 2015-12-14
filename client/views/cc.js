@@ -13,7 +13,7 @@ Template.cc.onRendered(function() {
   let bg = new Image();
   bg.src = 'imgs/delta_icon.png';
   bg.onload = () => {
-    $('#qr-code').qrcode({ text: session, mode: 4, image: bg, mSize: 0.4 });
+    $('#qr-code').qrcode({ text: session, mode: 4, image: bg, mSize: 0.1 });
   }
 
   // Handle this via subscriptions
