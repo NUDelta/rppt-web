@@ -71,3 +71,4 @@ function createTap(x, y) {
 function clearTap(tapId) {
   $(`#tapCircle${tapId}`).remove();
 }
+
