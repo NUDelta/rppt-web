@@ -2,9 +2,7 @@
     "galaxy.meteor.com": {
         "env": {
             "ROOT_URL": "http://rppt.meteorapp.com",
-            "MONGO_URL": "mongodb://dtrkevin:AgoisBuf9phhDwFRKBsEopAZuCPJeJNZkilIxDp6SPjMVDPyWc@ds011399.mlab.com:11399/rppt",
-            "KEY": "45692792",
-            "SECRET": "eeca00124e924f38128aa7ded39bbda10c73eb1f"
+            "MONGO_URL": "mongodb://dtrkevin:AgoisBuf9phhDwFRKBsEopAZuCPJeJNZkilIxDp6SPjMVDPyWc@ds011399.mlab.com:11399/rppt"
         }
     }
 }

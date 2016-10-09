@@ -1,11 +1,6 @@
 Meteor.methods({
     // Web Methods
     webCreateStream: function(session, role) {
-        const key = '45692792';
-        // const secret = Assets.getText('secret');
-        const secret = 'eeca00124e924f38128aa7ded39bbda10c73eb1f';
-        openTokClient = new OpenTokClient(key, secret);
-        
         let cred = {};
         cred.stream = openTokClient.createSession();
         cred.token = openTokClient.generateToken(cred.stream, { role: role });
@@ -76,11 +71,11 @@ Meteor.methods({
 
     // mixed fidelity element control
     showKeyboard: function(session) {
-        Messages.update({ session: session }, { $set: { content: 'show-keyboard' } });
+        Messages.update({ session: session }, { $set: { keyboard: 'show' } });
     },
 
     hideKeyboard: function(session) {
-        Messages.update({ session: session }, { $set: { content: 'hide-keyboard' } });
+        Messages.update({ session: session }, { $set: { keyboard: 'hide' } });
     }
 
 });

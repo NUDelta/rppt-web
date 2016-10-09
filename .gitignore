@@ -1,3 +1,5 @@
 local
 private/
 .DS_Store
+server/lib/environment.js
+settings.json
