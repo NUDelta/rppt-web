@@ -6,8 +6,8 @@ Template.paperStream.rendered = function () {
       let stream = OT.initSession(cred.key, cred.stream);
       stream.connect(cred.token, function(err) {
         let properties = {
-              height: 460,
-              width: 320,
+              height: 667,
+              width: 375,
               name: 'Paper Stream',
               mirror: false,
               style: {
@@ -26,6 +26,7 @@ Template.paperStream.rendered = function () {
 };
 
 var red = false;
+var green = false;
 
 function trackElements() {
 
@@ -35,7 +36,11 @@ function trackElements() {
 
   colors.on('track', function(event) {
     trackKeyboard(event);
-    trackCamera(event);
+    
+    // only update camera coords once a second
+    setTimeout( function() {
+      trackCamera(event);
+    }, 1000);
   });
 
   tracking.track('.OT_video-element', colors);
@@ -83,6 +88,7 @@ function trackCamera(event) {
   if (event.data.length > 0) {
       event.data.forEach(function(rect) {
         if(rect.color === 'green') {
+          green = true;
           console.log('show camera');
           console.log(rect.x, rect.y);
           Meteor.call('showCamera', session, rect.x.toString(), rect.y.toString(), rect.height.toString(), rect.width.toString(), (err, res) => { 
@@ -92,6 +98,19 @@ function trackCamera(event) {
             } else {
             }
           });
+        }
+        
+        // if we had green last time and now do not
+        else {
+          if(green) {
+            Meteor.call('hideCamera', session, (err, res) => { 
+            if (err) {
+                alert(err);
+                // This should actually never hit.
+            } else {
+            }
+          });
+          }
         } 
       })
     }

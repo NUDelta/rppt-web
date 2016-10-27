@@ -84,11 +84,11 @@ Meteor.methods({
                                                         y: y,
                                                         height: height,
                                                         width: width} });
-    }
+    },
 
-    // hideCamera: function(session) {
-    //     Messages.update({ session: session }, { $set: { camera: 'hide' } });
-    // }
+    hideCamera: function(session) {
+        Messages.update({ session: session }, { $set: { camera: 'hide' } });
+    }
 
 });
 
