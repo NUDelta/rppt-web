@@ -25,17 +25,13 @@ Template.paperStream.rendered = function () {
   });
 };
 
-
+var red = false;
 
 function trackElements() {
 
   defineColors();
 
   var colors = new tracking.ColorTracker(['red', 'green']);
-
-  var red = false;
-  var green = false;
-
 
   colors.on('track', function(event) {
     trackKeyboard(event);
@@ -46,7 +42,7 @@ function trackElements() {
 };
 
 
-function trackKeyboard(event, red) {
+function trackKeyboard(event) {
     // if there is a square detected
     if (event.data.length > 0){ 
       // loop through all squares
@@ -55,13 +51,14 @@ function trackKeyboard(event, red) {
         if(rect.color === 'red') {
           // if we didn't have red in previous frame
           if (!red){ // if we didn't have red in previous frame
+            console.log('show keyboard');
+            red = true;
             Meteor.call('showKeyboard', session, (err, res) => {
                 if (err) {
                     // This should actually never hit.
                 } else {
                 }
             }); 
-            red = true;
           } 
         }
       })
@@ -69,31 +66,38 @@ function trackKeyboard(event, red) {
 
     // if no square found in the frame
     else {
-      if (red){ 
+      if (red){
+        console.log('hideKeyboard');
+        red = false; 
         Meteor.call('hideKeyboard', session, (err, res) => {
             if (err) {
                 // This should actually never hit.
             } else {
             }
-        }); 
-        red = false;
+        });
       }
     }
   };
 
 function trackCamera(event) {
-    if (event.data.length > 0){
+  if (event.data.length > 0) {
       event.data.forEach(function(rect) {
         if(rect.color === 'green') {
-          Meteor.call('showCamera' rect.x, rect.y, rect.height, rect.width, (err, res) => {
+          console.log('show camera');
+          console.log(rect.x, rect.y);
+          Meteor.call('showCamera', session, rect.x.toString(), rect.y.toString(), rect.height.toString(), rect.width.toString(), (err, res) => { 
             if (err) {
+                alert(err);
                 // This should actually never hit.
             } else {
-            });
-        }
-      }); 
+            }
+          });
+        } 
+      })
     }
   };
+
+  
 
 function defineColors() {
   tracking.ColorTracker.registerColor('red', function(r, g, b) {
@@ -104,7 +108,7 @@ function defineColors() {
   });
 
   tracking.ColorTracker.registerColor('green', function(r, g, b) {
-    if (r < 50 && g > 200 && b < 50) {
+    if (r < 50 && g > 115 && b < 120) {
       return true;
     }
     return false;

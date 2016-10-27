@@ -76,15 +76,15 @@ Meteor.methods({
 
     hideKeyboard: function(session) {
         Messages.update({ session: session }, { $set: { keyboard: 'hide' } });
-    }
+    },
 
     showCamera: function(session, x, y, height, width) {
-        Messages.update({ session: session }, { $set: { camera: 'show', 
+        Messages.update({ session: session }, { $set: { camera: 'show',
                                                         x:  x,
                                                         y: y,
                                                         height: height,
                                                         width: width} });
-    },
+    }
 
     // hideCamera: function(session) {
     //     Messages.update({ session: session }, { $set: { camera: 'hide' } });
