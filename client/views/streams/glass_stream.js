@@ -6,8 +6,8 @@ Template.glassStream.rendered = function () {
             let stream = OT.initSession(cred.key, cred.stream);
             stream.on("streamCreated", function(event) {
                 let properties = {
-                    height: 320,
-                    width: 480,
+                    height: 266,
+                    width: 400,
                     name: 'Glass Stream',
                     style: {
                         backgroundImageURI: "stickies.jpg"

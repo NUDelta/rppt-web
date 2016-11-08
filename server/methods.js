@@ -92,10 +92,13 @@ Meteor.methods({
     },
 
     printKeyboardMessage: function(session, text) {
-        console.log(text);
         let newMessage = { session: session, text: text };
         Keyboard.insert(newMessage);
     },
+
+    clearMessages: function(session, text) {
+        Keyboard.remove({ session: session });
+    }
 
 });
 

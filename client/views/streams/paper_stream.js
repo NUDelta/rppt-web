@@ -6,8 +6,8 @@ Template.paperStream.rendered = function () {
       let stream = OT.initSession(cred.key, cred.stream);
       stream.connect(cred.token, function(err) {
         let properties = {
-              height: 667,
-              width: 375,
+              height: 550,
+              width: 286,
               name: 'Paper Stream',
               mirror: false,
               style: {

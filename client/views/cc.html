@@ -6,7 +6,7 @@
   </nav>
 
   <div class="row full-height">
-    <div class="col l3 center center-vertical full-height">
+    <div class="col l3 center center-vertic full-height">
       <div class="content padding">
         {{> taskSetter}}
         <div id="qr-code"></div>
@@ -15,6 +15,10 @@
             Stream Key: <span class="amber-text text-darken-4">{{ sessionKey }}</span>
           </h5>
         </div>
+      </div>
+      <div class="message padding">
+        <h3>User messages</h3>
+        <div id="message-container"></div>
       </div>
     </div>
 

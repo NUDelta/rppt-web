@@ -3,6 +3,14 @@ body {
   height: 100vh;
 }
 
+nav {
+  height: 50px;
+}
+
+nav .brand-logo {
+  font-size: 1.7rem;
+}
+
 .stream-placeholder {
   color: #696969;
 }
@@ -23,7 +31,11 @@ body {
 }
 
 .content.padding {
-  padding: 15% 10% 25% 10%;
+  padding: 25% 10% 5% 10%;
+}
+
+.message.padding {
+  padding: 5% 10% 5% 10%;
 }
 
 nav {
@@ -38,4 +50,9 @@ nav {
   position: absolute;
   right: 5px;
   bottom: 5px;
+}
+
+h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5px;
 }

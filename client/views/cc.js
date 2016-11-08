@@ -10,6 +10,7 @@ Template.cc.onCreated(function() {
 Template.cc.onRendered(function() {
   Meteor.call('createTaskEntry', session);
   Meteor.call('clearGestures', session);
+  Meteor.call('clearMessages', session);
 
   $(window).bind('beforeunload', () => {
     Meteor.call('cleanupStreams', session);
@@ -32,8 +33,8 @@ Template.cc.onRendered(function() {
 
   Keyboard.find().observeChanges({
     added: function (id, fields) {
-      console.log('change detected');
-      console.log(fields.text);
+      $('#message-container').append("<p>".concat(fields.text, "</p>"));
+      $('#message-container').animate({ scrollTop: $('#message-container').prop("scrollHeight")}, 1000);
       }
   });
 
