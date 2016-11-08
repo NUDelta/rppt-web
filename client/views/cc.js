@@ -4,6 +4,7 @@ let panning = false,
 
 Template.cc.onCreated(function() {
    this.subscribe('gestures', session);
+   this.subscribe('keyboard', session);
 });
 
 Template.cc.onRendered(function() {
@@ -28,6 +29,14 @@ Template.cc.onRendered(function() {
       }
     }
   });
+
+  Keyboard.find().observeChanges({
+    added: function (id, fields) {
+      console.log('change detected');
+      console.log(fields.text);
+      }
+  });
+
 });
 
 Template.cc.helpers({
@@ -53,6 +62,8 @@ function showTap(x, y) {
 }
 
 function createTap(x, y) {
+  console.log('createTap @ cc.js');
+
   let offset = 30,
       statusBarOffset = 20;
   let leftRightOffset = ($('.paper-col .content').width() - 320) / 2;

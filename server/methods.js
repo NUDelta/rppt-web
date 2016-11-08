@@ -40,7 +40,7 @@ Meteor.methods({
     // Gesture Handling
     createTap: function(session, x, y) {
         let tapAction = { session: session, done: false, action: 'tap', x: x, y: y };
-        // console.log('gesture received');
+        console.log('createTap @ methods.js');
         Gestures.insert(tapAction);
     },
 
@@ -53,6 +53,7 @@ Meteor.methods({
         Messages.remove({ session: session });
         Locations.remove({ session: session });
         Streams.remove({ session: session });
+        Keyboard.remove({ session: session });
     },
 
     // Task Handling
@@ -88,7 +89,13 @@ Meteor.methods({
 
     hideCamera: function(session) {
         Messages.update({ session: session }, { $set: { camera: 'hide' } });
-    }
+    },
+
+    printKeyboardMessage: function(session, text) {
+        console.log(text);
+        let newMessage = { session: session, text: text };
+        Keyboard.insert(newMessage);
+    },
 
 });
 
