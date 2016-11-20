@@ -81,10 +81,10 @@ Meteor.methods({
 
     showCamera: function(session, x, y, height, width) {
         Messages.update({ session: session }, { $set: { camera: 'show',
-                                                        x:  x,
-                                                        y: y,
-                                                        height: height,
-                                                        width: width} });
+                                                        camera_x:  x,
+                                                        camera_y: y,
+                                                        camera_height: height,
+                                                        camera_width: width} });
     },
 
     hideCamera: function(session) {
@@ -98,6 +98,18 @@ Meteor.methods({
 
     clearMessages: function(session, text) {
         Keyboard.remove({ session: session });
+    },
+
+    showTextbox: function(session, x, y, height, width) {
+        Messages.update({ session: session }, { $set: { textbox: 'show',
+                                                        tb_x:  x,
+                                                        tb_y: y,
+                                                        tb_height: height,
+                                                        tb_width: width} });
+    },
+
+    hideTextbox: function(session) {
+        Messages.update({ session: session }, { $set: { textbox: 'hide' } });
     }
 
 });

@@ -32,14 +32,15 @@ function trackElements() {
 
   defineColors();
 
-  var colors = new tracking.ColorTracker(['red', 'green']);
+  var colors = new tracking.ColorTracker(['red', 'green', 'blue']);
 
   colors.on('track', function(event) {
     trackKeyboard(event);
     
-    // only update camera coords once a second
+    // only update coords once a second
     setTimeout( function() {
-      trackCamera(event);
+      // trackCamera(event);
+      trackTextbox(event);
     }, 1000);
   });
 
@@ -52,7 +53,6 @@ function trackKeyboard(event) {
     if (event.data.length > 0){ 
       // loop through all squares
       event.data.forEach(function(rect) {
-        // if there's a red square
         if(rect.color === 'red') {
           // if we didn't have red in previous frame
           if (!red){ // if we didn't have red in previous frame
@@ -88,7 +88,6 @@ function trackCamera(event) {
   if (event.data.length > 0) {
       event.data.forEach(function(rect) {
         if(rect.color === 'green') {
-          green = true;
           console.log('show camera');
           console.log(rect.x, rect.y);
           Meteor.call('showCamera', session, rect.x.toString(), rect.y.toString(), rect.height.toString(), rect.width.toString(), (err, res) => { 
@@ -116,6 +115,24 @@ function trackCamera(event) {
     }
   };
 
+function trackTextbox(event) {
+  if (event.data.length > 0) {
+      event.data.forEach(function(rect) {
+        if(rect.color === 'blue') {
+          console.log('show textbox');
+          console.log(rect.x, rect.y);
+          Meteor.call('showTextbox', session, rect.x.toString(), rect.y.toString(), rect.height.toString(), rect.width.toString(), (err, res) => { 
+            if (err) {
+                alert(err);
+                // This should actually never hit.
+            } else {
+            }
+          });
+        }
+      })
+    }
+  };
+
   
 
 function defineColors() {
@@ -132,4 +149,11 @@ function defineColors() {
     }
     return false;
   });
+
+  tracking.ColorTracker.registerColor('blue', function(r, g, b) {
+    if (r < 100 && g < 175 && b > 180) {
+      return true;
+    }
+    return false;
+  })
 }
