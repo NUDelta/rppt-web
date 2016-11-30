@@ -71,20 +71,22 @@ Meteor.methods({
     },
 
     // mixed fidelity element control
-    showKeyboard: function(session) {
-        Messages.update({ session: session }, { $set: { keyboard: 'show' } });
+    keyboard: function(session, x, y, height, width) {
+        Messages.update({ session: session }, { $set: { keyboard_x: x,
+                                                        keyboard_y: y,
+                                                        keyboard_height: height,
+                                                        keyboard_width: width } });
     },
 
-    hideKeyboard: function(session) {
-        Messages.update({ session: session }, { $set: { keyboard: 'hide' } });
+    photo: function(session, x, y, height, width) {
+        Messages.update({ session: session }, { $set: { photo_x:  x,
+                                                        photo_y: y,
+                                                        photo_height: height,
+                                                        photo_width: width} });
     },
 
-    showCamera: function(session, x, y, height, width) {
-        Messages.update({ session: session }, { $set: { camera: 'show',
-                                                        camera_x:  x,
-                                                        camera_y: y,
-                                                        camera_height: height,
-                                                        camera_width: width} });
+    showCamera: function(session) {
+        Messages.update({ session: session }, { $set: { camera: 'show'} });
     },
 
     hideCamera: function(session) {
@@ -98,18 +100,6 @@ Meteor.methods({
 
     clearMessages: function(session, text) {
         Keyboard.remove({ session: session });
-    },
-
-    showTextbox: function(session, x, y, height, width) {
-        Messages.update({ session: session }, { $set: { textbox: 'show',
-                                                        tb_x:  x,
-                                                        tb_y: y,
-                                                        tb_height: height,
-                                                        tb_width: width} });
-    },
-
-    hideTextbox: function(session) {
-        Messages.update({ session: session }, { $set: { textbox: 'hide' } });
     }
 
 });

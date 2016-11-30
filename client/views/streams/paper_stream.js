@@ -25,23 +25,26 @@ Template.paperStream.rendered = function () {
   });
 };
 
+// BEST PRACTICES THO
 var red = false;
 var green = false;
+var blue = false;
 
 function trackElements() {
-
+  
   defineColors();
-
   var colors = new tracking.ColorTracker(['red', 'green', 'blue']);
+  
+  var frame_index = 0
 
-  colors.on('track', function(event) {
-    trackKeyboard(event);
-    
-    // only update coords once a second
-    setTimeout( function() {
-      // trackCamera(event);
-      trackTextbox(event);
-    }, 1000);
+  colors.on('track', function(frame) {
+    frame_index = frame_index + 1;
+    if (!(frame_index % 30)) {
+      console.log(frame_index)
+      trackCamera(frame);
+      overlayPhoto(frame);
+      trackKeyboard(frame);
+    }
   });
 
   tracking.track('.OT_video-element', colors);
@@ -54,17 +57,14 @@ function trackKeyboard(event) {
       // loop through all squares
       event.data.forEach(function(rect) {
         if(rect.color === 'red') {
-          // if we didn't have red in previous frame
-          if (!red){ // if we didn't have red in previous frame
-            console.log('show keyboard');
+            console.log('show keyboard', rect.x, rect.y);
             red = true;
-            Meteor.call('showKeyboard', session, (err, res) => {
+            Meteor.call('keyboard', session, rect.x.toString(), rect.y.toString(), rect.height.toString(), rect.width.toString(), (err, res) => {
                 if (err) {
                     // This should actually never hit.
                 } else {
                 }
             }); 
-          } 
         }
       })
     }
@@ -72,9 +72,9 @@ function trackKeyboard(event) {
     // if no square found in the frame
     else {
       if (red){
-        console.log('hideKeyboard');
+        console.log('hide keyboard');
         red = false; 
-        Meteor.call('hideKeyboard', session, (err, res) => {
+        Meteor.call('keyboard', session, null, null, null, null, (err, res) => {
             if (err) {
                 // This should actually never hit.
             } else {
@@ -84,13 +84,14 @@ function trackKeyboard(event) {
     }
   };
 
-function trackCamera(event) {
+function overlayPhoto(event) {
   if (event.data.length > 0) {
       event.data.forEach(function(rect) {
-        if(rect.color === 'green') {
-          console.log('show camera');
+      if(rect.color === 'blue') {
+          console.log('overlay photo');
           console.log(rect.x, rect.y);
-          Meteor.call('showCamera', session, rect.x.toString(), rect.y.toString(), rect.height.toString(), rect.width.toString(), (err, res) => { 
+          blue = true;
+          Meteor.call('photo', session, rect.x.toString(), rect.y.toString(), rect.height.toString(), rect.width.toString(), (err, res) => { 
             if (err) {
                 alert(err);
                 // This should actually never hit.
@@ -99,39 +100,58 @@ function trackCamera(event) {
           });
         }
         
-        // if we had green last time and now do not
-        else {
-          if(green) {
-            Meteor.call('hideCamera', session, (err, res) => { 
-            if (err) {
-                alert(err);
-                // This should actually never hit.
-            } else {
-            }
-          });
+        // if we had blue last time and now do not
+      else {
+        if(blue) {
+          blue = false;
+          console.log('hide photo')
+          Meteor.call('photo', session, null, null, null, null, (err, res) => { 
+          if (err) {
+              alert(err);
+              // This should actually never hit.
+          } else {
           }
-        } 
-      })
-    }
-  };
-
-function trackTextbox(event) {
-  if (event.data.length > 0) {
-      event.data.forEach(function(rect) {
-        if(rect.color === 'blue') {
-          console.log('show textbox');
-          console.log(rect.x, rect.y);
-          Meteor.call('showTextbox', session, rect.x.toString(), rect.y.toString(), rect.height.toString(), rect.width.toString(), (err, res) => { 
-            if (err) {
-                alert(err);
-                // This should actually never hit.
-            } else {
-            }
           });
         }
-      })
-    }
-  };
+      } 
+    })
+  }
+};
+
+function trackCamera(event) {
+  if (event.data.length > 0) {
+    event.data.forEach(function(rect) {
+      if(rect.color === 'green') {
+        if(!green) {
+          green = true;
+          console.log('show camera');
+          Meteor.call('showCamera', session, (err, res) => { 
+            if (err) {
+                alert(err);
+                // This should actually never hit.
+            } else {
+            }
+          });
+          return;
+        }
+      }
+
+      else {
+        if(green) {
+          green = false;
+          Meteor.call('hideCamera', session, (err, res) => {
+          if (err) {
+              alert(err);
+              // This should actually never hit.
+          } else {
+          }
+          });
+          return;
+        }
+      }
+    })
+  }
+};
 
   
 
@@ -151,9 +171,9 @@ function defineColors() {
   });
 
   tracking.ColorTracker.registerColor('blue', function(r, g, b) {
-    if (r < 100 && g < 175 && b > 180) {
+    if (r < 170 && g > 230 && b > 230) {
       return true;
     }
     return false;
-  })
+  });
 }
