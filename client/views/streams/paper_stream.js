@@ -7,7 +7,7 @@ Template.paperStream.rendered = function () {
       stream.connect(cred.token, function(err) {
         let properties = {
               height: 550,
-              width: 286,
+              width: 309,
               name: 'Paper Stream',
               mirror: false,
               style: {
@@ -52,14 +52,19 @@ function trackElements() {
 
 
 function trackKeyboard(event) {
+  let leftRightOffset = ($('.paper-col .content').width() - 320) / 2;
+
     // if there is a square detected
     if (event.data.length > 0){ 
       // loop through all squares
       event.data.forEach(function(rect) {
         if(rect.color === 'red') {
-            console.log('show keyboard', rect.x, rect.y);
             red = true;
-            Meteor.call('keyboard', session, rect.x.toString(), rect.y.toString(), rect.height.toString(), rect.width.toString(), (err, res) => {
+            console.log('webcam vals', rect.x, rect.y);
+            var x = rect.x - leftRightOffset;
+            var y = rect.y + 40; // status bar offset
+            console.log('sent vals', x, rect.y);
+            Meteor.call('keyboard', session, x.toString(), y.toString(), rect.height.toString(), rect.width.toString(), (err, res) => {
                 if (err) {
                     // This should actually never hit.
                 } else {
@@ -72,9 +77,9 @@ function trackKeyboard(event) {
     // if no square found in the frame
     else {
       if (red){
+        red = false;
         console.log('hide keyboard');
-        red = false; 
-        Meteor.call('keyboard', session, null, null, null, null, (err, res) => {
+        Meteor.call('keyboard', session, -999, -999, -999, -999, (err, res) => {
             if (err) {
                 // This should actually never hit.
             } else {
@@ -85,13 +90,19 @@ function trackKeyboard(event) {
   };
 
 function overlayPhoto(event) {
+  let leftRightOffset = ($('.paper-col .content').width() - 320) / 2;
+  
   if (event.data.length > 0) {
       event.data.forEach(function(rect) {
       if(rect.color === 'blue') {
           console.log('overlay photo');
           console.log(rect.x, rect.y);
+          var x = rect.x - leftRightOffset;
+          var y = rect.y + 40; // status bar offset
+          console.log('adjusted coordinates');
+          console.log(x, y);
           blue = true;
-          Meteor.call('photo', session, rect.x.toString(), rect.y.toString(), rect.height.toString(), rect.width.toString(), (err, res) => { 
+          Meteor.call('photo', session, x.toString(), y.toString(), rect.height.toString(), rect.width.toString(), (err, res) => { 
             if (err) {
                 alert(err);
                 // This should actually never hit.
@@ -105,7 +116,7 @@ function overlayPhoto(event) {
         if(blue) {
           blue = false;
           console.log('hide photo')
-          Meteor.call('photo', session, null, null, null, null, (err, res) => { 
+          Meteor.call('photo', session, -999, -999, -999, -999, (err, res) => { 
           if (err) {
               alert(err);
               // This should actually never hit.
@@ -119,37 +130,39 @@ function overlayPhoto(event) {
 };
 
 function trackCamera(event) {
+  var green_detected = false;
   if (event.data.length > 0) {
     event.data.forEach(function(rect) {
       if(rect.color === 'green') {
-        if(!green) {
-          green = true;
-          console.log('show camera');
-          Meteor.call('showCamera', session, (err, res) => { 
-            if (err) {
-                alert(err);
-                // This should actually never hit.
-            } else {
-            }
-          });
-          return;
+        green_detected = true;
         }
-      }
+      });
 
-      else {
-        if(green) {
-          green = false;
-          Meteor.call('hideCamera', session, (err, res) => {
-          if (err) {
-              alert(err);
-              // This should actually never hit.
-          } else {
+  if (green_detected) {
+    if(!green) {
+      green = true;
+      console.log('show camera');
+      Meteor.call('showCamera', session, (err, res) => { 
+        if (err) {
+            alert(err);
+            // This should actually never hit.
           }
-          });
-          return;
-        }
+        });
       }
-    })
+    }
+  }
+
+  else {
+    if(green) {
+      green = false;
+      console.log('hide camera')
+      Meteor.call('hideCamera', session, (err, res) => {
+      if (err) {
+        alert(err);
+        // This should actually never hit.
+        } 
+      });
+    }
   }
 };
 
@@ -157,21 +170,21 @@ function trackCamera(event) {
 
 function defineColors() {
   tracking.ColorTracker.registerColor('red', function(r, g, b) {
-    if (r > 195 && g < 100 && b < 100) {
+    if (r > 130 && g < 55 && b < 75) {
       return true;
     }
     return false;
   });
 
   tracking.ColorTracker.registerColor('green', function(r, g, b) {
-    if (r < 50 && g > 115 && b < 120) {
+    if (r < 150 && g > 150 && b < 175) {
       return true;
     }
     return false;
   });
 
   tracking.ColorTracker.registerColor('blue', function(r, g, b) {
-    if (r < 170 && g > 230 && b > 230) {
+    if (r < 160 && g > 155 && b > 195) {
       return true;
     }
     return false;

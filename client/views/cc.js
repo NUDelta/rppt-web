@@ -58,20 +58,19 @@ function clearSession() {
 }
 
 function showTap(x, y) {
+  console.log('Show tap: ', x, ' ', y);
   let id  = createTap(x, y);
   setTimeout(function() { clearTap(id); }, 500);
 }
 
 function createTap(x, y) {
-  console.log('createTap @ cc.js');
-
   let offset = 30,
-      statusBarOffset = 20;
+      statusBarOffset = 40;
   let leftRightOffset = ($('.paper-col .content').width() - 320) / 2;
 
   let div = document.createElement('div');
   div.style.left = `${x + leftRightOffset}px`;
-  div.style.top = `${y - statusBarOffset}px`;
+  div.style.top = `${y + statusBarOffset}px`;
   div.className = 'tap-indicator';
   div.setAttribute('id', `tapCircle${tapCounter}`);
   tapCounter += 1;

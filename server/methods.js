@@ -40,7 +40,6 @@ Meteor.methods({
     // Gesture Handling
     createTap: function(session, x, y) {
         let tapAction = { session: session, done: false, action: 'tap', x: x, y: y };
-        console.log('createTap @ methods.js');
         Gestures.insert(tapAction);
     },
 
