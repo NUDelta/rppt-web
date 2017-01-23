@@ -17,7 +17,7 @@ Template.paperStream.rendered = function () {
             },
         publisher = OT.initPublisher('publisher', properties);
         stream.publish(publisher, function() {
-          trackElements();
+          Qinit();
         });
         $('#publisher').css('outline', 'none');
       });
@@ -25,10 +25,6 @@ Template.paperStream.rendered = function () {
   });
 };
 
-// BEST PRACTICES THO
-var red = false;
-var green = false;
-var blue = false;
 
 function trackElements() {
   
@@ -39,10 +35,10 @@ function trackElements() {
 
   colors.on('track', function(frame) {
     frame_index = frame_index + 1;
-    if (!(frame_index % 30)) {
+    if (!(frame_index % 50)) {
       console.log(frame_index)
-      trackCamera(frame);
       overlayPhoto(frame);
+      trackCamera(frame);
       trackKeyboard(frame);
     }
   });
@@ -50,143 +46,98 @@ function trackElements() {
   tracking.track('.OT_video-element', colors);
 };
 
-
-function trackKeyboard(event) {
-  let leftRightOffset = ($('.paper-col .content').width() - 320) / 2;
-
-    // if there is a square detected
-    if (event.data.length > 0){ 
-      // loop through all squares
-      event.data.forEach(function(rect) {
-        if(rect.color === 'red') {
-            red = true;
-            console.log('webcam vals', rect.x, rect.y);
-            var x = rect.x - leftRightOffset;
-            var y = rect.y + 40; // status bar offset
-            console.log('sent vals', x, rect.y);
-            Meteor.call('keyboard', session, x.toString(), y.toString(), rect.height.toString(), rect.width.toString(), (err, res) => {
-                if (err) {
-                    // This should actually never hit.
-                } else {
-                }
-            }); 
+function Qinit() {
+      var timeoutHandle;
+      var kb = false;
+   
+      Quagga.init({
+        inputStream : {
+          name : "Live",
+          type : "LiveStream",
+          target: document.querySelector('#viewport'),
+          constraints : {
+            frequency: 2
+          }
+        },
+        decoder : {
+          readers : ["i2of5_reader"]
+        }
+      }, function(err) {
+        if (err) {
+          console.log('error handler start.');
+          console.log(err);
+          return
         }
       })
-    }
+      
+      console.log("Initialization finished. Ready to start");
+      
+      // setTimeout(function(){
+      //   Quagga.start();
+      // }, 2000);
 
-    // if no square found in the frame
-    else {
-      if (red){
-        red = false;
-        console.log('hide keyboard');
-        Meteor.call('keyboard', session, -999, -999, -999, -999, (err, res) => {
-            if (err) {
-                // This should actually never hit.
-            } else {
-            }
-        });
-      }
-    }
-  };
 
-function overlayPhoto(event) {
-  let leftRightOffset = ($('.paper-col .content').width() - 320) / 2;
-  
-  if (event.data.length > 0) {
-      event.data.forEach(function(rect) {
-      if(rect.color === 'blue') {
-          console.log('overlay photo');
-          console.log(rect.x, rect.y);
-          var x = rect.x - leftRightOffset;
-          var y = rect.y + 40; // status bar offset
-          console.log('adjusted coordinates');
-          console.log(x, y);
-          blue = true;
-          Meteor.call('photo', session, x.toString(), y.toString(), rect.height.toString(), rect.width.toString(), (err, res) => { 
-            if (err) {
-                alert(err);
-                // This should actually never hit.
-            } else {
-            }
-          });
-        }
-        
-        // if we had blue last time and now do not
-      else {
-        if(blue) {
-          blue = false;
-          console.log('hide photo')
-          Meteor.call('photo', session, -999, -999, -999, -999, (err, res) => { 
-          if (err) {
-              alert(err);
-              // This should actually never hit.
-          } else {
+
+      Quagga.onDetected(function(result) {
+        console.log(result.codeResult.code); //, result.codeResult.start, result.codeResult.end);
+
+        if (result.codeResult.code == 100040) {
+          if (!kb) {
+            console.log('showKeyboard');
+            Meteor.call('showKeyboard', session, (err, res) => {
+              if (err) {
+                // this should never actually hit
+              }
+              else{
+              }
+            })
+
+            kb = true;
           }
-          });
-        }
-      } 
-    })
-  }
-};
 
-function trackCamera(event) {
-  var green_detected = false;
-  if (event.data.length > 0) {
-    event.data.forEach(function(rect) {
-      if(rect.color === 'green') {
-        green_detected = true;
-        }
+          if (timeoutHandle){
+            clearTimeout(timeoutHandle);
+            }
+
+          timeoutHandle = setTimeout(function(){
+              kb = false;
+              console.log('hideKeyboard');
+              Meteor.call('showKeyboard', session, (err, res) => {
+                if (err) {
+                  // this should never actually hit
+                }
+                else{
+                }
+              })
+            }, 3000);
+        }    
+       // Quagga.offDetected();
+       // Quagga.offProcessed();
+       // Quagga.stop();
       });
 
-  if (green_detected) {
-    if(!green) {
-      green = true;
-      console.log('show camera');
-      Meteor.call('showCamera', session, (err, res) => { 
-        if (err) {
-            alert(err);
-            // This should actually never hit.
-          }
-        });
-      }
-    }
-  }
+      // Quagga.onProcessed(function(result) {
+      //   var drawingCtx = Quagga.canvas.ctx.overlay,
+      //       drawingCanvas = Quagga.canvas.dom.overlay;
 
-  else {
-    if(green) {
-      green = false;
-      console.log('hide camera')
-      Meteor.call('hideCamera', session, (err, res) => {
-      if (err) {
-        alert(err);
-        // This should actually never hit.
-        } 
-      });
-    }
-  }
-};
+      //   if (result) {
+      //       if (result.boxes) {
+      //           drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
+      //           result.boxes.filter(function (box) {
+      //               return box !== result.box;
+      //           }).forEach(function (box) {
+      //               Quagga.ImageDebug.drawPath(box, {x: 0, y: 1}, drawingCtx, {color: "green", lineWidth: 2});
+      //           });
+      //       }
 
-  
+      //       if (result.box) {
+      //           Quagga.ImageDebug.drawPath(result.box, {x: 0, y: 1}, drawingCtx, {color: "#00F", lineWidth: 2});
+      //       }
 
-function defineColors() {
-  tracking.ColorTracker.registerColor('red', function(r, g, b) {
-    if (r > 130 && g < 55 && b < 75) {
-      return true;
-    }
-    return false;
-  });
-
-  tracking.ColorTracker.registerColor('green', function(r, g, b) {
-    if (r < 150 && g > 150 && b < 175) {
-      return true;
-    }
-    return false;
-  });
-
-  tracking.ColorTracker.registerColor('blue', function(r, g, b) {
-    if (r < 160 && g > 155 && b > 195) {
-      return true;
-    }
-    return false;
-  });
+      //       if (result.codeResult && result.codeResult.code) {
+      //           Quagga.ImageDebug.drawPath(result.line, {x: 'x', y: 'y'}, drawingCtx, {color: 'red', lineWidth: 3});
+      //       }
+      //     }
+      // });
 }
+

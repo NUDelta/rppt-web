@@ -71,6 +71,7 @@ Meteor.methods({
 
     // mixed fidelity element control
     keyboard: function(session, x, y, height, width) {
+        console.log('keyboard called in methods.js');
         Messages.update({ session: session }, { $set: { keyboard_x: x,
                                                         keyboard_y: y,
                                                         keyboard_height: height,
@@ -100,6 +101,15 @@ Meteor.methods({
     clearMessages: function(session, text) {
         Keyboard.remove({ session: session });
     }
+
+    showKeyboard: function(session) {
+        Messages.update({ session: session }, { $set: { camera: 'show'} });
+    },
+
+    hideKeyboard: function(session) {
+        Messages.update({ session: session }, { $set: { camera: 'hide' } });
+    },
+
 
 });
 
