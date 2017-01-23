@@ -103,11 +103,11 @@ Meteor.methods({
     }
 
     showKeyboard: function(session) {
-        Messages.update({ session: session }, { $set: { camera: 'show'} });
+        Messages.update({ session: session }, { $set: { keyboard: 'show'} });
     },
 
     hideKeyboard: function(session) {
-        Messages.update({ session: session }, { $set: { camera: 'hide' } });
+        Messages.update({ session: session }, { $set: { keyboard: 'hide' } });
     },
 
 
