@@ -19,7 +19,29 @@ Template.paperStream.rendered = function () {
         stream.publish(publisher, function() {
           trackElements();
         });
-        $('#publisher').css('outline', 'none');
+        $('#subscriber').css('outline', 'none');
+      });
+      Meteor.call('mobileCreateStream', session, 'publisher', function(err, cred) {
+        if (err) {
+            alert(err);
+        } else {
+            let stream = OT.initSession(cred.key, cred.stream);
+            stream.on("streamCreated", function(event) {
+            let properties = {
+                  height: 550,
+                  width: 309,
+                  name: 'Paper Stream x2',
+                  mirror: false,
+                  style: {
+                    audioLevelDisplayMode: 'on',
+                    buttonDisplayMode: 'on'
+                  }
+                };
+                stream.subscribe(event.stream, "subscriber", properties);
+                $('#publisher').css('outline', 'none');
+              });
+            stream.connect(cred.token);
+        }
       });
     }
   });

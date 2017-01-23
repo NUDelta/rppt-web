@@ -1,15 +1,31 @@
 Meteor.methods({
     // Web Methods
     webCreateStream: function(session, role) {
+        console.log(session)
         let cred = {};
-        cred.stream = openTokClient.createSession();
-        cred.token = openTokClient.generateToken(cred.stream, { role: role });
+        cred.stream = '2_MX40NTQ3MTcyMn5-MTQ4NTE0MzQ4MDE1OH4yM2FoT3d0ODVJNmEzQWx4WVo2bjRDdmR-fg';
+        cred.token = 'T1==cGFydG5lcl9pZD00NTQ3MTcyMiZzaWc9ODRjZWU2ZDg2ODQ2NWNmMDI2OWZlMzk4ZWVmNmE4NWJhMWEwMjA1ZTpzZXNzaW9uX2lkPTJfTVg0ME5UUTNNVGN5TW41LU1UUTROVEUwTXpRNE1ERTFPSDR5TTJGb1QzZDBPRFZKTm1FelFXeDRXVm8yYmpSRGRtUi1mZyZjcmVhdGVfdGltZT0xNDg1MTQ5MTU1Jm5vbmNlPTAuNjIxNjIxODQ1ODI5NDUzMyZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNDg1MTcwNzU0';
         cred.key = key;
 
         console.log(`[webCreateStream]: Called as a ${role}. Creating stream.`);
         console.log(`[webCreateStream]: Session: ${cred.stream}`);
         console.log(`[webCreateStream]: Token: ${cred.token}`);
         Streams.insert({ session: session, streamId: cred.stream, role: role });
+        return cred;
+    },
+
+    mobileCreateStream: function(session, role) {
+        console.log(session)
+        let cred = {};
+        cred.stream = '2_MX40NTQ3MTcyMn5-MTQ4NTE0MzQ4MDE1OH4yM2FoT3d0ODVJNmEzQWx4WVo2bjRDdmR-fg';
+        cred.token = 'T1==cGFydG5lcl9pZD00NTQ3MTcyMiZzaWc9YWJlZTNlZGM5NzJiYTlkZTczNTNiMmUwYzAwOTQwN2UyYmNhMWJiZjpzZXNzaW9uX2lkPTJfTVg0ME5UUTNNVGN5TW41LU1UUTROVEUwTXpRNE1ERTFPSDR5TTJGb1QzZDBPRFZKTm1FelFXeDRXVm8yYmpSRGRtUi1mZyZjcmVhdGVfdGltZT0xNDg1MTQzNTA1Jm5vbmNlPTAuODU3MDYwMzc1NDc0MTg4NiZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNDg1MTY1MTA0';
+        cred.key = key;
+
+        console.log(`[mobileCreateStream]: Called as a ${role}. Creating stream.`);
+        console.log(`[mobileCreateStream]: Session: ${cred.stream}`);
+        console.log(`[mobileCreateStream]: Token: ${cred.token}`);
+        Streams.insert({ session: session, streamId: cred.stream, role: role });
+        console.log(Streams)
         return cred;
     },
 
@@ -22,6 +38,7 @@ Meteor.methods({
         let rerole = invertRole(role),
         stream = Streams.findOne({ session: session, role: rerole }),
         cred = {};
+        console.log(stream)
         try {
             cred.session = stream.streamId;
             cred.token = openTokClient.generateToken(stream.streamId, { role: role });
