@@ -100,7 +100,7 @@ Meteor.methods({
 
     clearMessages: function(session, text) {
         Keyboard.remove({ session: session });
-    }
+    },
 
     showKeyboard: function(session) {
         Messages.update({ session: session }, { $set: { keyboard: 'show'} });
