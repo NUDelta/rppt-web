@@ -103,6 +103,7 @@ Meteor.methods({
     },
 
     showKeyboard: function(session) {
+        console.log('fuck yeah motherfucker!');
         Messages.update({ session: session }, { $set: { keyboard: 'show'} });
     },
 
