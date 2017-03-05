@@ -55,3 +55,6 @@ function trackElements() {
   tracking.track('.OT_video-element', colors);
 };
 
+testFunction = function(){
+  console.log('work plz');
+}

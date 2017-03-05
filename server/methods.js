@@ -79,6 +79,13 @@ Meteor.methods({
     },
 
     photo: function(session, x, y, height, width) {
+        console.log('called photo in methods.js');
+        
+        x = String(x);
+        y = String(y);
+        height = String(height);
+        width = String(width);
+
         Messages.update({ session: session }, { $set: { photo_x:  x,
                                                         photo_y: y,
                                                         photo_height: height,
@@ -103,7 +110,6 @@ Meteor.methods({
     },
 
     showKeyboard: function(session) {
-        console.log('fuck yeah motherfucker!');
         Messages.update({ session: session }, { $set: { keyboard: 'show'} });
     },
 
@@ -111,6 +117,11 @@ Meteor.methods({
         Messages.update({ session: session }, { $set: { keyboard: 'hide' } });
     },
 
+    block: function(session, x, y, radius){
+        Messages.update({ session: session }, { $set: { block_x:  x,
+                                                        block_y: y,
+                                                        block_size: radius} });
+    }
 
 });
 
