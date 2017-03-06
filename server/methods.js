@@ -110,8 +110,7 @@ Meteor.methods({
     hideKeyboard: function(session) {
         Messages.update({ session: session }, { $set: { keyboard: 'hide' } });
     },
-
-
+    
 });
 
 function invertRole(role) {

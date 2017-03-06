@@ -31,27 +31,35 @@ Template.paperStream.rendered = function () {
         }
       });
     }
-  });
+  })
 };
 
+screenshot = function() {
+  var data = publisher.getImgData();
+  var img = document.createElement("img");
+  img.src = "data:image/png;base64," + data;
+  //document.getElementById('paper').appendChild(img);
+  var canvas = document.createElement("canvas");
+  img.onload = function() {
+    canvas.width = img.offsetWidth;
+    canvas.height = img.offsetHeight;
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img,0,0);
 
-function trackElements() {
-  
-  defineColors();
-  var colors = new tracking.ColorTracker(['red', 'green', 'blue']);
-  
-  var frame_index = 0
+    var imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
+    var data = imageData.data;
 
-  colors.on('track', function(frame) {
-    frame_index = frame_index + 1;
-    if (!(frame_index % 50)) {
-      console.log(frame_index)
-      overlayPhoto(frame);
-      trackCamera(frame);
-      trackKeyboard(frame);
+    for (var i = 0; i < data.length; i += 4) {
+      //if it's white, turn it transparent
+      if (data[i] > 200 && data[i+1] > 200 && data[i+2] > 200) {
+          data[i+3] = 0; 
+          console.log("changed to white");
+        }
     }
-  });
 
-  tracking.track('.OT_video-element', colors);
+    ctx.putImageData(imageData,0,0);
+    var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"); 
+    window.location.href=image; // it will save locally
+  }
 };
 
