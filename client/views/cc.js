@@ -64,9 +64,8 @@ function showTap(x, y) {
 }
 
 function createTap(x, y) {
-  let offset = 30,
-      statusBarOffset = 40;
-  let leftRightOffset = ($('.paper-col .content').width() - 320) / 2;
+  let statusBarOffset = 5;
+  let leftRightOffset = -5; // hacky, there should be a better way
 
   let div = document.createElement('div');
   div.style.left = `${x + leftRightOffset}px`;

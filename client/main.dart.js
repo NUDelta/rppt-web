@@ -6317,7 +6317,7 @@
     Duration: {
       "^": "Object;_duration<",
       $add: function(_, other) {
-        return new P.Duration(C.JSInt_methods.$add(this._duration, other.get$_duration()));
+        return new P.Duration(this._duration + other.get$_duration());
       },
       $sub: function(_, other) {
         return new P.Duration(this._duration - other.get$_duration());
@@ -7542,7 +7542,7 @@
         this.parseCodes$1(t2);
       }, "call$1", "get$refreshCanvas", 2, 0, 14],
       parseCodes$1: function(cd) {
-        var toRemove, t1, key, _i, x1, y1, x2, y2, height, width;
+        var toRemove, t1, key, _i, radius, x1, y1, x2, y2, height, width;
         toRemove = [];
         for (t1 = cd.get$keys(), t1 = t1.get$iterator(t1); t1.moveNext$0();) {
           key = t1.get$current();
@@ -7573,18 +7573,19 @@
         }
         if (cd.containsKey$1(93) && cd.containsKey$1(155) && cd.containsKey$1(203) && cd.containsKey$1(271)) {
           P.print("show photo");
-          x1 = J.$index$asx(cd.$index(0, 93), 2);
-          y1 = J.$index$asx(cd.$index(0, 93), 3);
-          x2 = J.$index$asx(cd.$index(0, 155), 2);
-          y2 = J.$index$asx(cd.$index(0, 203), 3);
+          radius = J.$index$asx(cd.$index(0, 93), 1);
+          x1 = J.$add$ns(J.$index$asx(cd.$index(0, 93), 2), radius);
+          y1 = J.$sub$n(J.$index$asx(cd.$index(0, 93), 3), radius);
+          x2 = J.$add$ns(J.$index$asx(cd.$index(0, 155), 2), radius);
+          y2 = J.$sub$n(J.$index$asx(cd.$index(0, 203), 3), radius);
           if (typeof x1 !== "number")
             return H.iae(x1);
-          x1 = (875 - x1) * 0.8241758241758241;
+          x1 = (892 - x1) * 0.8241758241758241;
           if (typeof x2 !== "number")
             return H.iae(x2);
-          y1 = J.$mul$ns(J.$sub$n(y1, 25), 1.0261538461538462);
-          height = J.$sub$n(J.$mul$ns(J.$sub$n(y2, 25), 1.0261538461538462), y1);
-          width = (875 - x2) * 0.8241758241758241 - x1;
+          y1 = J.$mul$ns(J.$sub$n(y1, 12), 1.0261538461538462);
+          height = J.$sub$n(J.$mul$ns(J.$sub$n(y2, 12), 1.0261538461538462), y1);
+          width = (892 - x2) * 0.8241758241758241 - x1;
           P.print([x1, y1, height, width]);
           J.$index$asx($.$get$context(), "Meteor").callMethod$2("call", ["photo", this.session, x1, y1, height, width]);
           this.photoPresent = true;
