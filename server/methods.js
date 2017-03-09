@@ -110,6 +110,10 @@ Meteor.methods({
     hideKeyboard: function(session) {
         Messages.update({ session: session }, { $set: { keyboard: 'hide' } });
     },
+
+    sendOverlay: function(session, image) {
+        Messages.update({ session: session }, { $set: { overlayedImage: image } });
+    },
     
 });
 

@@ -37,9 +37,12 @@ Template.paperStream.rendered = function () {
 screenshot = function() {
   var data = publisher.getImgData();
   var img = document.createElement("img");
+
   img.src = "data:image/png;base64," + data;
-  //document.getElementById('paper').appendChild(img);
+  document.getElementById('paper').appendChild(img);
+
   var canvas = document.createElement("canvas");
+
   img.onload = function() {
     canvas.width = img.offsetWidth;
     canvas.height = img.offsetHeight;
@@ -58,8 +61,12 @@ screenshot = function() {
     }
 
     ctx.putImageData(imageData,0,0);
-    var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"); 
-    window.location.href=image; // it will save locally
+
+    var image = canvas.toDataURL();
+    //remove "data:image/png;base64," and just send data
+    image = image.replace("data:image/png;base64,", "");
+    console.log(image);
+    Meteor.call('sendOverlay', session, image);
   }
 };
 
