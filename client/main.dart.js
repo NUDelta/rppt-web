@@ -7542,7 +7542,7 @@
         this.parseCodes$1(t2);
       }, "call$1", "get$refreshCanvas", 2, 0, 14],
       parseCodes$1: function(cd) {
-        var toRemove, t1, key, _i, radius, x1_web, y1_web, x2_web, y2_web, t2, t3, t4, t5, t6, t7, t8, x1_ios, y1_ios, height_ios, width_ios, height_web;
+        var toRemove, t1, key, _i, radius, x1_web, y1_web, x2_web, y2_web, x1_ios, y1_ios, height_ios, width_ios, height_web;
         toRemove = [];
         for (t1 = cd.get$keys(), t1 = t1.get$iterator(t1); t1.moveNext$0();) {
           key = t1.get$current();
@@ -7578,46 +7578,23 @@
           y1_web = J.$sub$n(J.$index$asx(cd.$index(0, 93), 3), radius);
           x2_web = J.$sub$n(J.$index$asx(cd.$index(0, 155), 2), radius);
           y2_web = J.$add$ns(J.$index$asx(cd.$index(0, 203), 3), radius);
-          t1 = [93];
-          return H.ioore(t1, 2);
-          t1 = t1[2];
-          t2 = [93];
-          return H.ioore(t2, 3);
-          t2 = t2[3];
-          t3 = [155];
-          return H.ioore(t3, 2);
-          t3 = t3[2];
-          t4 = [155];
-          return H.ioore(t4, 3);
-          t4 = t4[3];
-          t5 = [203];
-          return H.ioore(t5, 2);
-          t5 = t5[2];
-          t6 = [203];
-          return H.ioore(t6, 3);
-          t6 = t6[3];
-          t7 = [271];
-          return H.ioore(t7, 2);
-          t7 = t7[2];
-          t8 = [271];
-          return H.ioore(t8, 3);
-          P.print([t1, t2, t3, t4, t5, t6, t7, t8[3]]);
           if (typeof x1_web !== "number")
             return H.iae(x1_web);
           x1_ios = (892 - x1_web) * 0.8241758241758241;
           if (typeof x2_web !== "number")
             return H.iae(x2_web);
           y1_ios = J.$mul$ns(J.$sub$n(y1_web, 20), 1.0261538461538462);
-          t8 = J.getInterceptor$n(y2_web);
-          height_ios = J.$sub$n(J.$mul$ns(t8.$sub(y2_web, 20), 1.0261538461538462), y1_ios);
+          t1 = J.getInterceptor$n(y2_web);
+          height_ios = J.$sub$n(J.$mul$ns(t1.$sub(y2_web, 20), 1.0261538461538462), y1_ios);
           width_ios = (892 - x2_web) * 0.8241758241758241 - x1_ios;
-          height_web = t8.$sub(y2_web, y1_web);
+          height_web = t1.$sub(y2_web, y1_web);
           P.print([x1_ios, y1_ios, height_ios, width_ios]);
-          t8 = $.$get$context();
-          J.$index$asx(t8, "Meteor").callMethod$2("call", ["photo", this.session, x1_ios, y1_ios, height_ios, width_ios]);
+          t1 = $.$get$context();
+          J.$index$asx(t1, "Meteor").callMethod$2("call", ["photo", this.session, x1_ios, y1_ios, height_ios, width_ios]);
           this.photoPresent = true;
           if (cd.containsKey$1(421) && this.callTransperancy) {
-            t8.callMethod$2("screenshot", [x1_web, y1_web, height_web, x2_web - x1_web]);
+            P.print("call transperancy");
+            t1.callMethod$2("screenshot", [x1_web, y1_web, height_web, x2_web - x1_web]);
             this.callTransperancy = false;
           }
         } else {
