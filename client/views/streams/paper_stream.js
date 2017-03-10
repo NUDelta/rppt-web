@@ -34,7 +34,8 @@ Template.paperStream.rendered = function () {
   })
 };
 
-screenshot = function() {
+screenshot = function(x, y, height, width) {
+
   var data = publisher.getImgData();
   var img = document.createElement("img");
 
@@ -66,7 +67,7 @@ screenshot = function() {
     //remove "data:image/png;base64," and just send data
     image = image.replace("data:image/png;base64,", "");
     console.log(image);
-    Meteor.call('sendOverlay', session, image);
+    Meteor.call('sendOverlay', session, x, y, height, width, image);
   }
 };
 

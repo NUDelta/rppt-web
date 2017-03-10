@@ -6317,7 +6317,7 @@
     Duration: {
       "^": "Object;_duration<",
       $add: function(_, other) {
-        return new P.Duration(C.JSInt_methods.$add(this._duration, other.get$_duration()));
+        return new P.Duration(this._duration + other.get$_duration());
       },
       $sub: function(_, other) {
         return new P.Duration(this._duration - other.get$_duration());
@@ -7518,7 +7518,7 @@
       }
     },
     RPPT: {
-      "^": "Object;ctx,scanner,video,timer,codeDict,session,kbPresent,camPresent,photoPresent",
+      "^": "Object;ctx,scanner,video,timer,codeDict,session,kbPresent,camPresent,photoPresent,blockPresent",
       refreshCanvas$1: [function(timer) {
         var id, codes, t1, t2, _i, $top;
         if (this.video.className === "stopped") {
@@ -7542,7 +7542,7 @@
         this.parseCodes$1(t2);
       }, "call$1", "get$refreshCanvas", 2, 0, 14],
       parseCodes$1: function(cd) {
-        var toRemove, t1, key, _i, x, y, height, width;
+        var toRemove, t1, key, _i, radius, x1, y1, x2, y2, height, width;
         toRemove = [];
         for (t1 = cd.get$keys(), t1 = t1.get$iterator(t1); t1.moveNext$0();) {
           key = t1.get$current();
@@ -7573,13 +7573,25 @@
         }
         if (cd.containsKey$1(93) && cd.containsKey$1(155) && cd.containsKey$1(203) && cd.containsKey$1(271)) {
           P.print("show photo");
-          x = J.$index$asx(cd.$index(0, 93), 2);
-          y = J.$index$asx(cd.$index(0, 93), 3);
-          height = J.$sub$n(y, J.$index$asx(cd.$index(0, 203), 3));
-          width = J.$sub$n(x, J.$index$asx(cd.$index(0, 155), 3));
-          P.print([x, y, height, width]);
-          J.$index$asx($.$get$context(), "Meteor").callMethod$2("call", ["photo", this.session, x, y, height, width]);
+          radius = J.$index$asx(cd.$index(0, 93), 1);
+          x1 = J.$add$ns(J.$index$asx(cd.$index(0, 93), 2), radius);
+          y1 = J.$sub$n(J.$index$asx(cd.$index(0, 93), 3), radius);
+          x2 = J.$add$ns(J.$index$asx(cd.$index(0, 155), 2), radius);
+          y2 = J.$sub$n(J.$index$asx(cd.$index(0, 203), 3), radius);
+          if (typeof x1 !== "number")
+            return H.iae(x1);
+          x1 = (892 - x1) * 0.8241758241758241;
+          if (typeof x2 !== "number")
+            return H.iae(x2);
+          y1 = J.$mul$ns(J.$sub$n(y1, 20), 1.0261538461538462);
+          height = J.$sub$n(J.$mul$ns(J.$sub$n(y2, 20), 1.0261538461538462), y1);
+          width = (892 - x2) * 0.8241758241758241 - x1;
+          P.print([x1, y1, height, width]);
+          t1 = $.$get$context();
+          J.$index$asx(t1, "Meteor").callMethod$2("call", ["photo", this.session, x1, y1, height, width]);
           this.photoPresent = true;
+          if (cd.containsKey$1(421))
+            t1.callMethod$2("screenshot", [x1, y1, height, width]);
         } else {
           if (this.photoPresent)
             t1 = !cd.containsKey$1(93) || !cd.containsKey$1(155) || !cd.containsKey$1(203) || !cd.containsKey$1(271);
@@ -7606,7 +7618,7 @@
       static: {
         RPPT$: function() {
           var t1 = new H.JsLinkedHashMap(0, null, null, null, null, null, 0, [null, null]);
-          t1 = new X.RPPT(null, null, null, null, t1, J.$index$asx($.$get$context(), "session"), false, false, false);
+          t1 = new X.RPPT(null, null, null, null, t1, J.$index$asx($.$get$context(), "session"), false, false, false, false);
           t1.RPPT$0();
           return t1;
         }
@@ -8130,6 +8142,11 @@
   };
   J.$mod$n = function(receiver, a0) {
     return J.getInterceptor$n(receiver).$mod(receiver, a0);
+  };
+  J.$mul$ns = function(receiver, a0) {
+    if (typeof receiver == "number" && typeof a0 == "number")
+      return receiver * a0;
+    return J.getInterceptor$ns(receiver).$mul(receiver, a0);
   };
   J.$shl$n = function(receiver, a0) {
     return J.getInterceptor$n(receiver).$shl(receiver, a0);

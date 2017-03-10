@@ -79,6 +79,11 @@ Meteor.methods({
     },
 
     photo: function(session, x, y, height, width) {
+        x = String(x);
+        y = String(y);
+        height = String(height);
+        width = String(width);
+
         Messages.update({ session: session }, { $set: { photo_x:  x,
                                                         photo_y: y,
                                                         photo_height: height,
@@ -111,8 +116,17 @@ Meteor.methods({
         Messages.update({ session: session }, { $set: { keyboard: 'hide' } });
     },
 
-    sendOverlay: function(session, image) {
-        Messages.update({ session: session }, { $set: { overlayedImage: image } });
+    sendOverlay: function(session, x, y, height, width, image) {
+        x = String(x);
+        y = String(y);
+        height = String(height);
+        width = String(width);
+        
+        Messages.update({ session: session }, { $set: { overlayedImage_x: x,
+                                                        overlayedImage_y: y,
+                                                        overlayedImage_height: height,
+                                                        overlayedImage_width, width,
+                                                        overlayedImage: image } });
     },
     
 });
