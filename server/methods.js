@@ -90,6 +90,18 @@ Meteor.methods({
                                                         photo_width: width} });
     },
 
+    map: function(session, x, y, height, width) {
+        x = String(x);
+        y = String(y);
+        height = String(height);
+        width = String(width);
+
+        Messages.update({ session: session }, { $set: { map_x:  x,
+                                                        map_y: y,
+                                                        map_height: height,
+                                                        map_width: width} });
+    },
+
     showCamera: function(session) {
         Messages.update({ session: session }, { $set: { camera: 'show'} });
     },
@@ -125,7 +137,7 @@ Meteor.methods({
         Messages.update({ session: session }, { $set: { overlayedImage_x: x,
                                                         overlayedImage_y: y,
                                                         overlayedImage_height: height,
-                                                        overlayedImage_width, width,
+                                                        overlayedImage_width: width,
                                                         overlayedImage: image } });
     },
     
