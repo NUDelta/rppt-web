@@ -128,7 +128,7 @@ Meteor.methods({
         Messages.update({ session: session }, { $set: { keyboard: 'hide' } });
     },
 
-    sendOverlay: function(session, x, y, height, width, image) {
+    sendOverlay: function(session, x, y, width, height, image) {
         x = String(x);
         y = String(y);
         height = String(height);

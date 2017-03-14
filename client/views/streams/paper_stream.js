@@ -17,7 +17,7 @@ Template.paperStream.rendered = function () {
             stream.on("streamCreated", function(event) {
               let properties = {
                   height: 550,
-                  width: 309,
+                  width: 320,
                   name: 'iPhone Stream',
                   mirror: false,
                   style: {
@@ -34,64 +34,63 @@ Template.paperStream.rendered = function () {
   })
 };
 
-screenshot = function(x, y, height, width) {
+screenshot = function(x, y, width, height, x_ios, y_ios, width_ios, height_ios) {
 
   var data = publisher.getImgData();
   var img = document.createElement("img");
 
   img.src = "data:image/png;base64," + data;
-  document.getElementById('paper').appendChild(img);
 
   var canvas = document.createElement("canvas");
+  var paper = document.getElementById('paper')
 
-  console.log("This should happen first.")
+  paper.appendChild(img)
 
   img.onload = function() {
-    whiteToTransparent(canvas, img, x, y, height, width, function(canvas) {
-      sendToiPhone(canvas, x, y, height, width)
+    whiteToTransparent(canvas, img, x, y, width, height, x_ios, y_ios, width_ios, height_ios, function(canvas) {
+      sendToiPhone(canvas, x_ios, y_ios, width_ios, height_ios)
     });
   };
 };
 
-function whiteToTransparent(canvas, img, x, y, height, width, callback) {
-  console.log("This should happen second.")
+function whiteToTransparent(canvas, img, x, y, width, height, x_ios, y_ios, width_ios, height_ios, callback) {
 
-  console.log(x)
+  canvas.width = img.offsetWidth
+  canvas.height = img.offsetHeight
 
-  // canvas.width = img.offsetWidth;
-  // canvas.height = img.offsetHeight;
   var ctx = canvas.getContext("2d");
+
   ctx.drawImage(img, 0, 0);
 
-  console.log("Before encoding")
-  console.log(canvas.toDataURL())
-
   var imageData = ctx.getImageData(x, y, width, height);
-  var data = imageData.data;
 
-  for (var i = 0; i < data.length; i += 4) {
+  for (var i = 0; i < imageData.data.length; i += 4) {
     //if it's white, turn it transparent
-    if (data[i] > 200 && data[i+1] > 200 && data[i+2] > 200) {
-        data[i+3] = 0; 
+    if (imageData.data[i] > 200 && imageData.data[i+1] > 200 && imageData.data[i+2] > 200) {
+        imageData.data[i+3] = 0; 
         console.log("changed to white");
       }
   }
 
-  ctx.putImageData(imageData, x, y);
+  //clear canvas for redrawing
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-  console.log("This should happen two and a halfith");
+  canvas.height = height
+  canvas.width = width
+
+  //ctx should automatically update since its passed by referenced
+  ctx.putImageData(imageData, 0, 0);
 
   callback(canvas);
 };
 
-function sendToiPhone(canvas, x, y, height, width) {
-  console.log("This should happen third.")
+function sendToiPhone(canvas, x_ios, y_ios, width_ios, height_ios) {
 
   var encodedImage = canvas.toDataURL();
+
   //remove "data:image/png;base64," and just send data
   encodedImage = encodedImage.replace("data:image/png;base64,", "");
-  console.log("encodedImage")
-  console.log(encodedImage); 
-  Meteor.call('sendOverlay', session, x, y, height, width, encodedImage);
-}
+
+  Meteor.call('sendOverlay', session, x_ios, y_ios, width_ios, height_ios, encodedImage);
+};
 
