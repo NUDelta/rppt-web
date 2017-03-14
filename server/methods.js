@@ -80,7 +80,6 @@ Meteor.methods({
 
     photo: function(session, x, y, height, width) {
         console.log('called photo in methods.js');
-        
         x = String(x);
         y = String(y);
         height = String(height);
@@ -90,6 +89,18 @@ Meteor.methods({
                                                         photo_y: y,
                                                         photo_height: height,
                                                         photo_width: width} });
+    },
+
+    map: function(session, x, y, height, width) {
+        x = String(x);
+        y = String(y);
+        height = String(height);
+        width = String(width);
+
+        Messages.update({ session: session }, { $set: { map_x:  x,
+                                                        map_y: y,
+                                                        map_height: height,
+                                                        map_width: width} });
     },
 
     showCamera: function(session) {
@@ -122,6 +133,19 @@ Meteor.methods({
                                                         block_y: y,
                                                         block_size: radius} });
     }
+
+    sendOverlay: function(session, x, y, width, height, image) {
+        x = String(x);
+        y = String(y);
+        height = String(height);
+        width = String(width);
+        
+        Messages.update({ session: session }, { $set: { overlayedImage_x: x,
+                                                        overlayedImage_y: y,
+                                                        overlayedImage_height: height,
+                                                        overlayedImage_width: width,
+                                                        overlayedImage: image } });
+    },
 
 });
 
