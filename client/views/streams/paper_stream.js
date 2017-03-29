@@ -86,8 +86,7 @@ function whiteToTransparent(canvas, img, x, y, width, height, x_ios, y_ios, widt
 };
 
 function sendToiPhone(canvas, x_ios, y_ios, width_ios, height_ios) {
-  var encodedImage = canvas.toDataURL();
-  var encodedData = encodedImage.replace("data:image/png;base64,", "");
+  var encodedImage = canvas.toDataURL().replace("data:image/png;base64,", "");
 
   var img = document.createElement('img');
   img.src = encodedImage;
