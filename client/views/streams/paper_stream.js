@@ -35,8 +35,9 @@ Template.paperStream.rendered = function () {
 };
 
 screenshot = function(x, y, width, height, x_ios, y_ios, width_ios, height_ios) {
-
+  console.time('getimgdata')
   var data = publisher.getImgData();
+  console.timeEnd('getimgdata')
   var img = document.createElement("img");
 
   img.src = "data:image/png;base64," + data;
@@ -66,9 +67,9 @@ function whiteToTransparent(canvas, img, x, y, width, height, x_ios, y_ios, widt
 
   for (var i = 0; i < imageData.data.length; i += 4) {
     //if it's white, turn it transparent
-    if (imageData.data[i] > 200 && imageData.data[i+1] > 200 && imageData.data[i+2] > 200) {
-        imageData.data[i+3] = 0; 
-        console.log("changed to white");
+    const threshold = 100;
+    if (imageData.data[i] > threshold && imageData.data[i+1] > threshold && imageData.data[i+2] > threshold) {
+        imageData.data[i+3] = 0;
       }
   }
 
@@ -85,11 +86,13 @@ function whiteToTransparent(canvas, img, x, y, width, height, x_ios, y_ios, widt
 };
 
 function sendToiPhone(canvas, x_ios, y_ios, width_ios, height_ios) {
-
   var encodedImage = canvas.toDataURL();
+  var encodedData = encodedImage.replace("data:image/png;base64,", "");
 
-  //remove "data:image/png;base64," and just send data
-  encodedImage = encodedImage.replace("data:image/png;base64,", "");
+  var img = document.createElement('img');
+  img.src = encodedImage;
+  var paper = document.getElementById('paper');
+  paper.appendChild(img);
 
   Meteor.call('sendOverlay', session, x_ios, y_ios, width_ios, height_ios, encodedImage);
 };

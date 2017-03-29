@@ -129,16 +129,14 @@ Meteor.methods({
     },
 
     sendOverlay: function(session, x, y, width, height, image) {
-        x = String(x);
-        y = String(y);
-        height = String(height);
-        width = String(width);
-        
-        Messages.update({ session: session }, { $set: { overlayedImage_x: x,
-                                                        overlayedImage_y: y,
-                                                        overlayedImage_height: height,
-                                                        overlayedImage_width: width,
-                                                        overlayedImage: image } });
+      var data = {
+        overlayedimage_x: x.toString(),
+        overlayedimage_y: y.toString(),
+        overlayedimage_height: height.toString(),
+        overlayedimage_width: width.toString(),
+        overlayedimage: image,
+      };
+        Messages.update({ session: session }, { $set: data });
     },
 
 });
