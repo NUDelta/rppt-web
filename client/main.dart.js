@@ -3990,7 +3990,9 @@
         return;
       }
       if (typeof console == "object" && typeof console.log != "undefined") {
-        console.log(string);
+        if (string !== '{}') {
+          console.log(string);
+        }
         return;
       }
       if (typeof window == "object")
