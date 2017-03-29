@@ -136,7 +136,7 @@ Meteor.methods({
         overlayedimage_width: width.toString(),
         overlayedimage: image,
       };
-        messages.update({ session: session }, { $set: data });
+        Messages.update({ session: session }, { $set: data });
     },
 
 });
