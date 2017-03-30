@@ -1,0 +1,11 @@
+{
+  "name": "rppt-web",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:sarahlim/rppt-web.git",
+  "author": "Kevin J. Chen <kevinjchen94@gmail.com> (http://kevinchen.ninja/)",
+  "license": "MIT",
+  "dependencies": {
+    "babel-runtime": "^6.23.0"
+  }
+}
