@@ -58,7 +58,7 @@ function startVideo() {
         video.srcObject = mediaStream;
         video.className = "started";  // use this class name to communicate with dart
         stream = mediaStream;
-        $('#camera-button').css('color', 'red');
+        $('#camera-button').css('background-color', 'red');
       })
 
       .catch(function (error) {

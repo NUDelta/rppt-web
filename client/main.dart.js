@@ -3990,9 +3990,7 @@
         return;
       }
       if (typeof console == "object" && typeof console.log != "undefined") {
-        if (string !== '{}') {
-          console.log(string);
-        }
+        console.log(string);
         return;
       }
       if (typeof window == "object")
@@ -7641,16 +7639,16 @@
           radius = J.$index$asx(cd.$index(0, 93), 1);
           x1_web = J.$add$ns(J.$index$asx(cd.$index(0, 93), 2), radius);
           y1_web = J.$sub$n(J.$index$asx(cd.$index(0, 93), 3), radius);
-          x2_web = J.$sub$n(J.$index$asx(cd.$index(0, 155), 2), radius);
-          y2_web = J.$add$ns(J.$index$asx(cd.$index(0, 203), 3), radius);
+          x2_web = J.$add$ns(J.$index$asx(cd.$index(0, 155), 2), radius);
+          y2_web = J.$sub$n(J.$index$asx(cd.$index(0, 203), 3), radius);
           if (typeof x1_web !== "number")
             return H.iae(x1_web);
           x1_ios = (892 - x1_web) * 0.8241758241758241;
           if (typeof x2_web !== "number")
             return H.iae(x2_web);
-          y1_ios = J.$mul$ns(J.$sub$n(y1_web, 20), 1.0261538461538462);
+          y1_ios = J.$add$ns(J.$mul$ns(J.$sub$n(y1_web, 20), 0.8293269230769231), 20);
           t1 = J.getInterceptor$n(y2_web);
-          height_ios = J.$sub$n(J.$mul$ns(t1.$sub(y2_web, 20), 1.0261538461538462), y1_ios);
+          height_ios = J.$sub$n(J.$add$ns(J.$mul$ns(t1.$sub(y2_web, 20), 0.8293269230769231), 20), y1_ios);
           width_ios = (892 - x2_web) * 0.8241758241758241 - x1_ios;
           height_web = t1.$sub(y2_web, y1_web);
           P.print([x1_ios, y1_ios, height_ios, width_ios]);

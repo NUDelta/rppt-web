@@ -1,5 +1,6 @@
 Template.paperStream.rendered = function () {
-  Meteor.call('webCreateStream', session, 'publisher', function(err, cred) {
+
+  Meteor.call('webCreateStream', session, 'publisher', function (err, cred) {
     if (err) {
       alert(err);
     } else {
@@ -31,21 +32,19 @@ Template.paperStream.rendered = function () {
         }
       });
     }
-  })
+  });
 };
 
 screenshot = function(x, y, width, height, x_ios, y_ios, width_ios, height_ios) {
-  console.time('getimgdata')
   var data = publisher.getImgData();
-  console.timeEnd('getimgdata')
   var img = document.createElement("img");
 
-  img.src = "data:image/png;base64," + data;
+  img.src = 'data:image/png;base64,' + data;
 
-  var canvas = document.createElement("canvas");
-  var paper = document.getElementById('paper')
+  var canvas = document.createElement('canvas');
+  var paper = document.getElementById('paper');
 
-  paper.appendChild(img)
+  // paper.appendChild(img);
 
   img.onload = function() {
     whiteToTransparent(canvas, img, x, y, width, height, x_ios, y_ios, width_ios, height_ios, function(canvas) {
@@ -56,8 +55,8 @@ screenshot = function(x, y, width, height, x_ios, y_ios, width_ios, height_ios) 
 
 function whiteToTransparent(canvas, img, x, y, width, height, x_ios, y_ios, width_ios, height_ios, callback) {
 
-  canvas.width = img.offsetWidth
-  canvas.height = img.offsetHeight
+  canvas.width = img.offsetWidth;
+  canvas.height = img.offsetHeight;
 
   var ctx = canvas.getContext("2d");
 
@@ -76,8 +75,8 @@ function whiteToTransparent(canvas, img, x, y, width, height, x_ios, y_ios, widt
   //clear canvas for redrawing
   ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-  canvas.height = height
-  canvas.width = width
+  canvas.height = height;
+  canvas.width = width;
 
   //ctx should automatically update since its passed by referenced
   ctx.putImageData(imageData, 0, 0);
