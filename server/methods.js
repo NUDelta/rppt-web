@@ -3,13 +3,13 @@ Meteor.methods({
     webCreateStream: function(session, role) {
         let cred = {};
         cred.stream = openTokClient.createSession();
-        cred.token = openTokClient.generateToken(cred.stream, { role: role });
+        cred.token = openTokClient.generateToken(cred.stream, { role });
         cred.key = key;
 
         console.log(`[webCreateStream]: Called as a ${role}. Creating stream.`);
         console.log(`[webCreateStream]: Session: ${cred.stream}`);
         console.log(`[webCreateStream]: Token: ${cred.token}`);
-        Streams.insert({ session: session, streamId: cred.stream, role: role });
+        Streams.insert({ session, streamId: cred.stream, role });
         return cred;
     },
 
@@ -20,7 +20,7 @@ Meteor.methods({
     // Mobile Methods
     getStreamData: function(session, role) {
         let rerole = invertRole(role),
-        stream = Streams.findOne({ session: session, role: rerole }),
+        stream = Streams.findOne({ session, role: rerole }),
         cred = {};
         try {
             cred.session = stream.streamId;

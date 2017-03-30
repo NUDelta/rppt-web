@@ -6,21 +6,23 @@
 
 
 iron:router
-standard-minifiers
-meteor-base
-mobile-experience
-mongo
+meteor-base@1.0.4
+mobile-experience@1.0.4
+mongo@1.1.16
 blaze-html-templates
-session
-jquery
-tracker
-logging
-reload
-random
-ejson
+session@1.1.7
+jquery@1.11.10
+tracker@1.1.2
+logging@1.1.17
+reload@1.1.11
+random@1.0.10
+ejson@1.0.13
 spacebars
-check
-ecmascript
+check@1.2.5
+ecmascript@0.6.3
 aspin:tokbox
 dschulz:jquery-qrcode
 materialize:materialize
+standard-minifier-css
+standard-minifier-js
+shell-server

@@ -1,0 +1,9 @@
+{
+  "name": "rppt-web",
+  "version": "1.0.0",
+  "repository": "https://github.com/NUDelta/rppt-web",
+  "license": "MIT",
+  "dependencies": {
+    "babel-runtime": "^6.23.0"
+  }
+}
