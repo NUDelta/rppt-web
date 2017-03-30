@@ -44,7 +44,7 @@ screenshot = function(x, y, width, height, x_ios, y_ios, width_ios, height_ios) 
   var canvas = document.createElement('canvas');
   var paper = document.getElementById('paper');
 
-  // paper.appendChild(img);
+  paper.appendChild(img);
 
   img.onload = function() {
     whiteToTransparent(canvas, img, x, y, width, height, x_ios, y_ios, width_ios, height_ios, function(canvas) {
@@ -73,7 +73,7 @@ function whiteToTransparent(canvas, img, x, y, width, height, x_ios, y_ios, widt
   }
 
   //clear canvas for redrawing
-  ctx.clearRect(0, 0, canvas.width, canvas.height)
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   canvas.height = height;
   canvas.width = width;
