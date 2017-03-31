@@ -6363,7 +6363,7 @@
     Duration: {
       "^": "Object;_duration<",
       $add: function(_, other) {
-        return new P.Duration(this._duration + other.get$_duration());
+        return new P.Duration(C.JSInt_methods.$add(this._duration, other.get$_duration()));
       },
       $sub: function(_, other) {
         return new P.Duration(this._duration - other.get$_duration());
@@ -7604,8 +7604,39 @@
         }
         this.parseCodes$1(t2);
       }, "call$1", "get$refreshCanvas", 2, 0, 14],
+      transformIos$4: function(x1, x2, y1, y2) {
+        var t1, t2, t3, t4, t5, t6;
+        t1 = $.RPPT_xOffset;
+        if (typeof x1 !== "number")
+          return H.iae(x1);
+        t2 = $.RPPT_iosWidth / $.RPPT_xRange;
+        if (typeof x2 !== "number")
+          return H.iae(x2);
+        t3 = J.$sub$n(y1, $.RPPT_yOffset);
+        t4 = $.$get$RPPT_iosHeight();
+        t5 = $.RPPT_yRange;
+        if (typeof t4 !== "number")
+          return t4.$div();
+        t5 = J.$add$ns(J.$mul$ns(t3, t4 / t5), $.RPPT_iosMenuBar);
+        t4 = J.$sub$n(y2, $.RPPT_yOffset);
+        t3 = $.$get$RPPT_iosHeight();
+        t6 = $.RPPT_yRange;
+        if (typeof t3 !== "number")
+          return t3.$div();
+        return [(t1 - x1) * t2, (t1 - x2) * t2, t5, J.$add$ns(J.$mul$ns(t4, t3 / t6), $.RPPT_iosMenuBar)];
+      },
+      fetchCoordinates$3: function(topLeft, topRight, bottomLeft) {
+        var t1, radius, t2, t3;
+        t1 = J.getInterceptor$asx(topLeft);
+        radius = t1.$index(topLeft, 1);
+        t2 = t1.$index(topLeft, 2);
+        if (typeof radius !== "number")
+          return H.iae(radius);
+        t3 = 2 * radius;
+        return [J.$add$ns(J.$add$ns(t2, t3), $.RPPT_extra), J.$sub$n(J.$sub$n(t1.$index(topLeft, 3), t3), $.RPPT_extra), J.$add$ns(J.$index$asx(topRight, 2), $.RPPT_extra), J.$sub$n(J.$index$asx(bottomLeft, 3), $.RPPT_extra)];
+      },
       parseCodes$1: function(cd) {
-        var toRemove, t1, key, _i, radius, x1_web, y1_web, x2_web, y2_web, x1_ios, y1_ios, height_ios, width_ios, height_web;
+        var toRemove, t1, key, _i, coordinates, x1_web, y1_web, x2_web, y2_web, transformed, x1_ios, x2_ios, y1_ios, height_ios, width_ios, height_web, width_web;
         toRemove = [];
         for (t1 = cd.get$keys(), t1 = t1.get$iterator(t1); t1.moveNext$0();) {
           key = t1.get$current();
@@ -7636,28 +7667,26 @@
         }
         if (cd.containsKey$1(93) && cd.containsKey$1(155) && cd.containsKey$1(203) && cd.containsKey$1(271)) {
           P.print("show photo");
-          radius = J.$index$asx(cd.$index(0, 93), 1);
-          x1_web = J.$add$ns(J.$index$asx(cd.$index(0, 93), 2), radius);
-          y1_web = J.$sub$n(J.$index$asx(cd.$index(0, 93), 3), radius);
-          x2_web = J.$add$ns(J.$index$asx(cd.$index(0, 155), 2), radius);
-          y2_web = J.$sub$n(J.$index$asx(cd.$index(0, 203), 3), radius);
-          if (typeof x1_web !== "number")
-            return H.iae(x1_web);
-          x1_ios = (892 - x1_web) * 0.8241758241758241;
-          if (typeof x2_web !== "number")
-            return H.iae(x2_web);
-          y1_ios = J.$add$ns(J.$mul$ns(J.$sub$n(y1_web, 20), 0.8293269230769231), 20);
-          t1 = J.getInterceptor$n(y2_web);
-          height_ios = J.$sub$n(J.$add$ns(J.$mul$ns(t1.$sub(y2_web, 20), 0.8293269230769231), 20), y1_ios);
-          width_ios = (892 - x2_web) * 0.8241758241758241 - x1_ios;
-          height_web = t1.$sub(y2_web, y1_web);
+          coordinates = this.fetchCoordinates$3(cd.$index(0, 93), cd.$index(0, 155), cd.$index(0, 203));
+          x1_web = coordinates[0];
+          y1_web = coordinates[1];
+          x2_web = coordinates[2];
+          y2_web = coordinates[3];
+          transformed = this.transformIos$4(x1_web, x2_web, y1_web, y2_web);
+          x1_ios = transformed[0];
+          x2_ios = transformed[1];
+          y1_ios = transformed[2];
+          height_ios = J.$sub$n(transformed[3], y1_ios);
+          width_ios = J.$sub$n(x2_ios, x1_ios);
+          height_web = J.$sub$n(y2_web, y1_web);
+          width_web = J.$sub$n(x2_web, x1_web);
           P.print([x1_ios, y1_ios, height_ios, width_ios]);
           t1 = $.$get$context();
           J.$index$asx(t1, "Meteor").callMethod$2("call", ["photo", this.session, x1_ios, y1_ios, height_ios, width_ios]);
           this.photoPresent = true;
           if (cd.containsKey$1(421) && this.callTransperancy) {
             P.print("call transperancy");
-            t1.callMethod$2("screenshot", [x1_web, y1_web, x2_web - x1_web, height_web, x1_ios, y1_ios, width_ios, height_ios]);
+            t1.callMethod$2("screenshot", [x1_web, y1_web, width_web, height_web, x1_ios, y1_ios, width_ios, height_ios]);
             this.callTransperancy = false;
           }
         } else {
@@ -7673,27 +7702,25 @@
         }
         if (cd.containsKey$1(157) && cd.containsKey$1(205) && cd.containsKey$1(279) && cd.containsKey$1(327)) {
           P.print("show map");
-          radius = J.$index$asx(cd.$index(0, 157), 1);
-          x1_web = J.$add$ns(J.$index$asx(cd.$index(0, 157), 2), radius);
-          y1_web = J.$sub$n(J.$index$asx(cd.$index(0, 157), 3), radius);
-          x2_web = J.$add$ns(J.$index$asx(cd.$index(0, 205), 2), radius);
-          y2_web = J.$sub$n(J.$index$asx(cd.$index(0, 279), 3), radius);
-          if (typeof x1_web !== "number")
-            return H.iae(x1_web);
-          x1_ios = (892 - x1_web) * 0.8241758241758241;
-          if (typeof x2_web !== "number")
-            return H.iae(x2_web);
-          y1_ios = J.$mul$ns(J.$sub$n(y1_web, 20), 1.0261538461538462);
-          t1 = J.getInterceptor$n(y2_web);
-          height_ios = J.$sub$n(J.$mul$ns(t1.$sub(y2_web, 20), 1.0261538461538462), y1_ios);
-          width_ios = (892 - x2_web) * 0.8241758241758241 - x1_ios;
-          height_web = t1.$sub(y2_web, y1_web);
+          coordinates = this.fetchCoordinates$3(cd.$index(0, 157), cd.$index(0, 205), cd.$index(0, 279));
+          x1_web = coordinates[0];
+          y1_web = coordinates[1];
+          x2_web = coordinates[2];
+          y2_web = coordinates[3];
+          transformed = this.transformIos$4(x1_web, x2_web, y1_web, y2_web);
+          x1_ios = transformed[0];
+          x2_ios = transformed[1];
+          y1_ios = transformed[2];
+          height_ios = J.$sub$n(transformed[3], y1_ios);
+          width_ios = J.$sub$n(x2_ios, x1_ios);
+          height_web = J.$sub$n(y2_web, y1_web);
+          width_web = J.$sub$n(x2_web, x1_web);
           P.print([x1_ios, y1_ios, height_ios, width_ios]);
           t1 = $.$get$context();
           J.$index$asx(t1, "Meteor").callMethod$2("call", ["map", this.session, x1_ios, y1_ios, height_ios, width_ios]);
           this.mapPresent = true;
           if (cd.containsKey$1(331))
-            t1.callMethod$2("screenshot", [x1_web, y1_web, x2_web - x1_web, height_web, x1_ios, y1_ios, width_ios, height_ios]);
+            t1.callMethod$2("screenshot", [x1_web, y1_web, width_web, height_web, x1_ios, y1_ios, width_ios, height_ios]);
         } else {
           if (this.mapPresent)
             t1 = !cd.containsKey$1(157) || !cd.containsKey$1(205) || !cd.containsKey$1(279) || !cd.containsKey$1(327);
@@ -8478,6 +8505,13 @@
   $.Zone__current = C.C__RootZone;
   $.Expando__keyCount = 0;
   $.rppt = null;
+  $.RPPT_xOffset = 892;
+  $.RPPT_yOffset = 20;
+  $.RPPT_xRange = 455;
+  $.RPPT_yRange = 650;
+  $.RPPT_iosWidth = 375;
+  $.RPPT_iosMenuBar = 20;
+  $.RPPT_extra = 10;
   $ = null;
   init.isHunkLoaded = function(hunkHash) {
     return !!$dart_deferred_initializers$[hunkHash];
@@ -8586,7 +8620,9 @@
     return function DartObject(o) {
       this.o = o;
     };
-  }, "_dartProxyCtor"]);
+  }, "_dartProxyCtor", "RPPT_iosHeight", "$get$RPPT_iosHeight", function() {
+    return $.RPPT_iosWidth * 1.4375;
+  }, "RPPT_iosHeight"]);
   Isolate = Isolate.$finishIsolateConstructor(Isolate);
   $ = new Isolate();
   init.metadata = ["error", "stackTrace", null, "_", "e", "x", "value", "data", "o", "object", "sender", "closure", "isolate", "numberOfArguments", "arg1", "arg2", "arg3", "arg4", "each", "arg", "callback", "captureThis", "self", "arguments"];
