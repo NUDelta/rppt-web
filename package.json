@@ -5,5 +5,8 @@
   "license": "MIT",
   "dependencies": {
     "babel-runtime": "^6.23.0"
+  },
+  "scripts": {
+    "build-dart": "cd imports/topcode-rppt && pub build && cd ../../"
   }
 }
