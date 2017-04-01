@@ -62,7 +62,10 @@ function whiteToTransparent(canvas, img, x, y, width, height, x_ios, y_ios, widt
 
   ctx.drawImage(img, 0, 0);
 
-  var imageData = ctx.getImageData(x, y, width, height);
+  if (width > 0 && height > 0)
+    var imageData = ctx.getImageData(x, y, width, height);
+  else
+    var imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
 
   for (var i = 0; i < imageData.data.length; i += 4) {
     //if it's white, turn it transparent
@@ -75,8 +78,10 @@ function whiteToTransparent(canvas, img, x, y, width, height, x_ios, y_ios, widt
   //clear canvas for redrawing
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  canvas.height = height;
-  canvas.width = width;
+  if (width > 0 && height > 0) {
+    canvas.height = height;
+    canvas.width = width;
+  }
 
   //ctx should automatically update since its passed by referenced
   ctx.putImageData(imageData, 0, 0);
