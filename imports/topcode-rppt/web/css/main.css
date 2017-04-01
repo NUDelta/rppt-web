@@ -1,62 +1,4 @@
-body {
-  background-color: #e8eaf6;
-  height: 100vh;
-}
-
-nav {
-  height: 50px;
-}
-
-nav .brand-logo {
-  font-size: 1.7rem;
-}
-
-.stream-placeholder {
-  color: #696969;
-}
-
-.center-vertical {
-  display: flex;
-  align-items: center;
-}
-
-.full-height {
-  height: 100%;
-}
-
-.content {
-  position: relative;
-  width: 100%;
-  padding-top: 15%;
-}
-
-.content.padding {
-  padding: 25% 10% 5% 10%;
-}
-
-.message.padding {
-  padding: 5% 10% 5% 10%;
-}
-
-nav {
-  position: fixed;
-}
-
-.row {
-  margin-bottom: 0;
-}
-
-.attribution {
-  position: absolute;
-  right: 5px;
-  bottom: 5px;
-}
-
-h3 {
-  font-size: 1.5rem;
-  margin-bottom: 1.5px;
-}
-
+@charset "utf-8";
 
 body {
    background-color: #fff;
@@ -67,17 +9,24 @@ body {
    text-align: center;
 }
 
+
 #video-canvas {
+  position: absolute;
   border: 1px solid black;
   background-color: transparent;
-  display: none;
+  top: 20px;
+  left: 20px;
 }
 
+
 #video-stream {
+  position: absolute;
+  top: 20px;
+  left: 20px;
   background-color: #ccc;
-  opacity: 0.5;
-  display: none;
+  opacity: 0;
 }
+
 
 #scan-message {
   position: absolute;
@@ -108,13 +57,10 @@ button {
 
 
 #camera-button {
-  font-size: 20px;
+  position: absolute;
+  font-size: 30px;
+  top: 25px;
+  left: 25px;
   color: white;
-  width: auto;
-  margin: 1em 0 2em 0;
 }
 #camera-button:active { color: rgba(255, 255, 255, 0.5); }
-
-.l5 h3 {
-  margin-bottom: 1em;
-}
