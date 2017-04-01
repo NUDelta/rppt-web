@@ -49,8 +49,6 @@ screenshot = function(x, y, width, height, x_ios, y_ios, width_ios, height_ios) 
   };
 };
 
-const xRange = 455;
-const yRange = 650;
 function whiteToTransparent(canvas, img, x, y, width, height, callback) {
   console.log('whiteToTransparent');
   console.log(x, y, width, height);
@@ -65,7 +63,6 @@ function whiteToTransparent(canvas, img, x, y, width, height, callback) {
     var imageData = ctx.getImageData(x, y, width, height);
   else
     var imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
-  imageData = ctx.getImageData(x, y, width, height);
   for (var i = 0; i < imageData.data.length; i += 4) {
     //if it's white, turn it transparent
     const threshold = 100;
