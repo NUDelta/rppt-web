@@ -6,7 +6,7 @@ Template.paperStream.rendered = function () {
     } else {
       let stream = OT.initSession(cred.key, cred.stream);
       stream.connect(cred.token, function(err) {
-        publisher = OT.initPublisher();
+        publisher = OT.initPublisher('publisher');
         stream.publish(publisher);
       });
       Meteor.call('webCreateStream', session, 'subscriber', function(err, cred) {

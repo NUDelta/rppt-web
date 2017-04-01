@@ -21,10 +21,8 @@
   position: relative;
 }
 
-#publisher {
-  width: 320px;
-  height: 460px;
-  outline: 2px dashed #696969;
+#paper {
+  position: relative;
   margin: auto;
 }
 
@@ -51,3 +49,4 @@
   margin-bottom: 5px;
   line-height: 1;
 }
+

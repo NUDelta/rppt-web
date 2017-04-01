@@ -6,37 +6,39 @@
   </nav>
 
   <div class="row full-height">
-    <div class="col l3 center center-vertic full-height">
+    <div class="col l3 center center-vertical full-height">
       <div class="content padding">
-        {{> taskSetter}}
-        <div id="qr-code"></div>
-        <div>
+        <div id="stream-key">
           <h5>
             Stream Key: <span class="amber-text text-darken-4">{{ sessionKey }}</span>
           </h5>
         </div>
-      </div>
-      <div class="message padding">
-        <h3>User messages</h3>
-        <div id="message-container"></div>
+        <button id="camera-button">
+          <span class="fa fa-video-camera">Toggle Detection</span>
+        </button>
+        <div id="publisher"></div>
+        <video id="video-stream"></video>
+        <canvas id="video-canvas" width="1280" height="720"></canvas>
       </div>
     </div>
 
-    <div class="col l5 center center-vertical full-height">
+    <div class="col l5 center full-height">
       <div class="content">
-        {{> glassStream}}
-        {{> map}}
+        <h3>Phone Stream</h3>
+        {{> paperStream}}
       </div>
     </div>
 
     <div class="col l4 center center-vertical full-height paper-col">
       <div class="content">
-        {{> paperStream}}
+        {{> taskSetter}}
+        <div class="message padding">
+          <h3>User messages</h3>
+          <div id="message-container"></div>
+        </div>
+        {{> map}}
       </div>
     </div>
-
-
-    <p class="blue-grey-text attribution">Created by <a href="http://kevinchen.ninja">Kevin Chen</a>, as part of <a href="http://haoqizhang.com">Prof. Haoqi Zhang</a>'s <a href="http://dtr.meteor.com">DTR</a> and <a href="http://delta.northwestern.edu">Delta Lab</a>.</p>
   </div>
 
 </template>

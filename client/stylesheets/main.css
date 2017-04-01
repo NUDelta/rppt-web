@@ -67,26 +67,17 @@ body {
    text-align: center;
 }
 
-
 #video-canvas {
-  position: absolute;
   border: 1px solid black;
   background-color: transparent;
-  top: 20px;
-  left: 20px;
   display: none;
 }
 
-
 #video-stream {
-  position: absolute;
-  top: 20px;
-  left: 20px;
   background-color: #ccc;
   opacity: 0.5;
   display: none;
 }
-
 
 #scan-message {
   position: absolute;
@@ -117,11 +108,13 @@ button {
 
 
 #camera-button {
-  position: absolute;
-  font-size: 30px;
-  top: 25px;
-  left: 25px;
+  font-size: 20px;
   color: white;
+  width: auto;
+  margin: 1em 0 2em 0;
 }
 #camera-button:active { color: rgba(255, 255, 255, 0.5); }
 
+.l5 h3 {
+  margin-bottom: 1em;
+}
