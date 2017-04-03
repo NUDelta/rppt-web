@@ -56,14 +56,14 @@ function whiteToTransparent(canvas, img, x, y, width, height, callback) {
   canvas.height = img.offsetHeight;
 
   const ctx = canvas.getContext('2d');
-  // console.log(img);
   ctx.drawImage(img, 0, 0);
 
+  let imageData;
   if (width > 0 && height > 0)
-    var imageData = ctx.getImageData(x, y, width, height);
+    imageData = ctx.getImageData(x, y, width, height);
   else
-    var imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
-  for (var i = 0; i < imageData.data.length; i += 4) {
+    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  for (let i = 0; i < imageData.data.length; i += 4) {
     //if it's white, turn it transparent
     const threshold = 100;
     if (imageData.data[i] > threshold && imageData.data[i+1] > threshold && imageData.data[i+2] > threshold) {

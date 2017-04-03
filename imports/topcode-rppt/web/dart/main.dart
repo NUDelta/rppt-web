@@ -78,6 +78,19 @@ class RPPT {
 
   RPPT() {
     CanvasElement canvas = querySelector("#video-canvas");
+    print(canvas);
+    ctx = canvas.getContext("2d");
+    scanner = new Scanner();
+    video = querySelector("#video-stream");
+
+    video.autoplay = true;
+    video.onPlay.listen((e) {
+      timer = new Timer.periodic(const Duration(milliseconds : 100), refreshCanvas);
+    });
+  }
+
+  void init() {
+    CanvasElement canvas = querySelector("#video-canvas");
     ctx = canvas.getContext("2d");
     scanner = new Scanner();
     video = querySelector("#video-stream");
@@ -166,7 +179,7 @@ class RPPT {
       (coordinates.x1 - 2 * radius - extra) * xScale,
       (coordinates.y1 - 2 * radius - extra) * yScale + iosMenuBar,
       (coordinates.x2 + extra) * xScale,
-      (coordinates.y2 + 2 * extra) * yScale + iosMenuBar
+      (coordinates.y2 + extra) * yScale + iosMenuBar
     );
   }
 
@@ -175,7 +188,7 @@ class RPPT {
     return new Coordinates(
         xOffset - coordinates.x1,
         coordinates.y1 + 2 * radius,
-        xOffset - coordinates.x2,
+        xOffset - coordinates.x2 + 2 * radius,
         coordinates.y2
     );
   }
@@ -225,27 +238,30 @@ class RPPT {
 
     // photo
     // 93 – top L; 155 – top  R; 203 – bottom L; 271 – bottom R
-    if (cd.containsKey(93) && cd.containsKey(155) && cd.containsKey(203) && cd.containsKey(271)){
+    if (cd.containsKey(93) && cd.containsKey(155) && cd.containsKey(203) &&
+        cd.containsKey(271)) {
       print('show photo');
       Coordinates originalCoordinates = fetchCoordinates(cd[93], cd[155],
           cd[203]);
       Coordinates ios = transformIos(originalCoordinates);
-      double height_ios = ios.y2 - ios.y1;
-      double width_ios = ios.x2 - ios.x1;
+      double height_ios = (ios.y2 - ios.y1).abs();
+      double width_ios = (ios.x2 - ios.x1).abs();
 
       Coordinates web = transformWeb(originalCoordinates);
-      double height_web = web.y2 - web.y1;
-      double width_web = web.x1 - web.x2;
+      double height_web = (web.y2 - web.y1).abs();
+      double width_web = (web.x2 - web.x1).abs();
 
-      context['Meteor'].callMethod('call', ['photo', session, ios.x1, ios.y1,
-      height_ios, width_ios]);
+      context['Meteor'].callMethod('call',
+          ['photo', session, ios.x1, ios.y1, height_ios, width_ios]);
       photoPresent = true;
 
        // call screenshot for multi-fidelity overlay
       if (cd.containsKey(421) && callTransparency) {
         print('call transparency');
+        // use web.x2 (top right) NOT web.x1
+        // web.x1's value will always be > web.x2
         context.callMethod('screenshot',
-            [web.x1, web.y1, width_web, height_web,
+            [web.x2, web.y1, width_web, height_web,
             ios.x1, ios.y1, width_ios, height_ios]);
         callTransparency = false;
       }
@@ -257,18 +273,19 @@ class RPPT {
 
     // <editor-fold desc="map">
     // 157 – top L; 205 – top  R; 279 – bottom L; 327 – bottom R
-    if (cd.containsKey(157) && cd.containsKey(205) && cd.containsKey(279) && cd.containsKey(327)){
+    if (cd.containsKey(157) && cd.containsKey(205) && cd.containsKey(279) &&
+        cd.containsKey(327)) {
       print('show map');
       Coordinates originalCoordinates = fetchCoordinates(cd[157], cd[205],
           cd[279]);
 
       Coordinates ios = transformIos(originalCoordinates);
-      double height_ios = ios.y2 - ios.y1;
-      double width_ios = ios.x2 - ios.x1;
+      double height_ios = (ios.y2 - ios.y1).abs();
+      double width_ios = (ios.x2 - ios.x1).abs();
 
       Coordinates web = transformWeb(originalCoordinates);
-      double height_web = web.y2 - web.y1;
-      double width_web = web.x1 - web.x2;
+      double height_web = (web.y2 - web.y1).abs();
+      double width_web = (web.x2 - web.x1).abs();
 
       print([ios.x1, ios.y1, height_ios, width_ios]);
 
@@ -278,7 +295,7 @@ class RPPT {
 
        // call screenshot for multi-fidelity overlay
       if (cd.containsKey(331)) {
-        context.callMethod('screenshot', [web.x1, web.y1, width_web,
+        context.callMethod('screenshot', [web.x2, web.y1, width_web,
         height_web, ios.x1, ios.y1, width_ios, height_ios]);
       }
     } else if (mapPresent && (!cd.containsKey(157) || !cd.containsKey(205) || !cd.containsKey(279) || !cd.containsKey(327)) ){
