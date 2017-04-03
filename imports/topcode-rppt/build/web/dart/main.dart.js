@@ -804,6 +804,9 @@
     },
     JSNumber: {
       "^": "Interceptor;",
+      abs$0: function(receiver) {
+        return Math.abs(receiver);
+      },
       toInt$0: function(receiver) {
         var t1;
         if (receiver >= -2147483648 && receiver <= 2147483647)
@@ -6405,6 +6408,9 @@
         sixDigitUs = new P.Duration_toString_sixDigits().call$1(t2 % 1000000);
         return "" + C.JSInt_methods._tdivFast$1(t2, 3600000000) + ":" + H.S(twoDigitMinutes) + ":" + H.S(twoDigitSeconds) + "." + H.S(sixDigitUs);
       },
+      abs$0: function(_) {
+        return new P.Duration(Math.abs(this._duration));
+      },
       static: {
         Duration$: function(days, hours, microseconds, milliseconds, minutes, seconds) {
           return new P.Duration(864e8 * days + 3600000000 * hours + 60000000 * minutes + 1000000 * seconds + 1000 * milliseconds + microseconds);
@@ -7638,16 +7644,17 @@
         t6 = $.$get$RPPT_xScale();
         if (typeof t6 !== "number")
           return H.iae(t6);
-        return new X.Coordinates((coordinates.x1 - t1 - t2) * t3, (coordinates.x2 + t5) * t6, t4, J.$add$ns(J.$mul$ns(J.$add$ns(coordinates.y2, 2 * t5), $.$get$RPPT_yScale()), $.RPPT_iosMenuBar), null);
+        return new X.Coordinates((coordinates.x1 - t1 - t2) * t3, (coordinates.x2 + t5) * t6, t4, J.$add$ns(J.$mul$ns(J.$add$ns(coordinates.y2, t5), $.$get$RPPT_yScale()), $.RPPT_iosMenuBar), null);
       },
       transformWeb$1: function(coordinates) {
-        var radius, t1, t2;
+        var radius, t1, t2, t3;
         radius = coordinates.radius;
         t1 = $.RPPT_xOffset;
         if (typeof radius !== "number")
           return H.iae(radius);
-        t2 = J.$add$ns(coordinates.y1, 2 * radius);
-        return new X.Coordinates(t1 - coordinates.x1 - 200, $.RPPT_xOffset - coordinates.x2 - 200, t2, coordinates.y2, null);
+        t2 = 2 * radius;
+        t3 = J.$add$ns(coordinates.y1, t2);
+        return new X.Coordinates(t1 - coordinates.x1, $.RPPT_xOffset - coordinates.x2 + t2, t3, coordinates.y2, null);
       },
       parseCodes$1: function(cd) {
         var toRemove, t1, key, _i, originalCoordinates, ios, height_ios, t2, width_ios, web, t3, height_web, t4, t5;
@@ -7684,19 +7691,19 @@
           originalCoordinates = this.fetchCoordinates$3(cd.$index(0, 93), cd.$index(0, 155), cd.$index(0, 203));
           ios = this.transformIos$1(originalCoordinates);
           t1 = ios.y1;
-          height_ios = J.$sub$n(ios.y2, t1);
+          height_ios = J.abs$0$n(J.$sub$n(ios.y2, t1));
           t2 = ios.x1;
-          width_ios = ios.x2 - t2;
+          width_ios = Math.abs(ios.x2 - t2);
           web = this.transformWeb$1(originalCoordinates);
           t3 = web.y1;
-          height_web = J.$sub$n(web.y2, t3);
-          t4 = web.x1;
+          height_web = J.abs$0$n(J.$sub$n(web.y2, t3));
+          t4 = web.x2;
           t5 = $.$get$context();
           J.$index$asx(t5, "Meteor").callMethod$2("call", ["photo", this.session, t2, t1, height_ios, width_ios]);
           this.photoPresent = true;
           if (cd.containsKey$1(421) && this.callTransparency) {
             P.print("call transparency");
-            t5.callMethod$2("screenshot", [t4, t3, t4 - web.x2, height_web, t2, t1, width_ios, height_ios]);
+            t5.callMethod$2("screenshot", [t4, t3, Math.abs(t4 - web.x1), height_web, t2, t1, width_ios, height_ios]);
             this.callTransparency = false;
           }
         } else {
@@ -7715,19 +7722,19 @@
           originalCoordinates = this.fetchCoordinates$3(cd.$index(0, 157), cd.$index(0, 205), cd.$index(0, 279));
           ios = this.transformIos$1(originalCoordinates);
           t1 = ios.y1;
-          height_ios = J.$sub$n(ios.y2, t1);
+          height_ios = J.abs$0$n(J.$sub$n(ios.y2, t1));
           t2 = ios.x1;
-          width_ios = ios.x2 - t2;
+          width_ios = Math.abs(ios.x2 - t2);
           web = this.transformWeb$1(originalCoordinates);
           t3 = web.y1;
-          height_web = J.$sub$n(web.y2, t3);
-          t4 = web.x1;
+          height_web = J.abs$0$n(J.$sub$n(web.y2, t3));
+          t4 = web.x2;
           P.print([t2, t1, height_ios, width_ios]);
           t5 = $.$get$context();
           J.$index$asx(t5, "Meteor").callMethod$2("call", ["map", this.session, t2, t1, height_ios, width_ios]);
           this.mapPresent = true;
           if (cd.containsKey$1(331))
-            t5.callMethod$2("screenshot", [t4, t3, t4 - web.x2, height_web, t2, t1, width_ios, height_ios]);
+            t5.callMethod$2("screenshot", [t4, t3, Math.abs(t4 - web.x1), height_web, t2, t1, width_ios, height_ios]);
         } else {
           if (this.mapPresent)
             t1 = !cd.containsKey$1(157) || !cd.containsKey$1(205) || !cd.containsKey$1(279) || !cd.containsKey$1(327);
@@ -7742,8 +7749,11 @@
         P.print(cd);
       },
       RPPT$0: function() {
-        var t1 = document;
-        this.ctx = J.getContext$1$x(t1.querySelector("#video-canvas"), "2d");
+        var t1, canvas;
+        t1 = document;
+        canvas = t1.querySelector("#video-canvas");
+        P.print(canvas);
+        this.ctx = J.getContext$1$x(canvas, "2d");
         this.scanner = new X.Scanner(null, null, null);
         t1 = t1.querySelector("#video-stream");
         this.video = t1;
@@ -8298,6 +8308,9 @@
   };
   J._removeEventListener$3$x = function(receiver, a0, a1, a2) {
     return J.getInterceptor$x(receiver)._removeEventListener$3(receiver, a0, a1, a2);
+  };
+  J.abs$0$n = function(receiver) {
+    return J.getInterceptor$n(receiver).abs$0(receiver);
   };
   J.drawImage$3$x = function(receiver, a0, a1, a2) {
     return J.getInterceptor$x(receiver).drawImage$3(receiver, a0, a1, a2);
