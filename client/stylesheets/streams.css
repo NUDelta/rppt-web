@@ -17,13 +17,13 @@
 }
 
 #paper-wrapper {
-  margin: auto;
+  /* margin: auto; */
   position: relative;
 }
 
 #paper {
   position: relative;
-  margin: auto;
+  /* margin: auto; */
 }
 
 #map {

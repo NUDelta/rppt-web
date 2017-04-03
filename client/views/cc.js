@@ -68,7 +68,7 @@ function createTap(x, y) {
   div.setAttribute('id', `tapCircle${tapCounter}`);
   tapCounter += 1;
 
-  $('#paper').append(div);
+  $('#paper-wrapper').append(div);
   return tapCounter - 1;
 }
 
