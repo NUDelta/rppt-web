@@ -17,7 +17,8 @@
 }
 
 #paper-wrapper {
-  /* margin: auto; */
+  width: 320px;
+  margin: auto;
   position: relative;
 }
 
