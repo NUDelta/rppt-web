@@ -51,18 +51,14 @@ screenshot = function(x, y, width, height, x_ios, y_ios, width_ios, height_ios) 
 
 function whiteToTransparent(canvas, img, x, y, width, height, callback) {
   console.log('whiteToTransparent');
-  console.log(x, y, width, height);
   canvas.width = img.offsetWidth;
   canvas.height = img.offsetHeight;
 
   const ctx = canvas.getContext('2d');
   ctx.drawImage(img, 0, 0);
 
-  let imageData;
-  if (width > 0 && height > 0)
-    imageData = ctx.getImageData(x, y, width, height);
-  else
-    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  var imageData = ctx.getImageData(x, y, width, height);
+
   for (let i = 0; i < imageData.data.length; i += 4) {
     //if it's white, turn it transparent
     const threshold = 100;
@@ -74,10 +70,8 @@ function whiteToTransparent(canvas, img, x, y, width, height, callback) {
   // clear canvas for redrawing
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  if (width > 0 && height > 0) {
-    canvas.height = height;
-    canvas.width = width;
-  }
+  canvas.height = height;
+  canvas.width = width;
 
   // //ctx should automatically update since its passed by referenced
   ctx.putImageData(imageData, 0, 0);
@@ -91,5 +85,43 @@ function sendToiPhone(canvas, x_ios, y_ios, width_ios, height_ios) {
   const paper = document.getElementById('paper');
   paper.appendChild(img);
   Meteor.call('sendOverlay', session, x_ios, y_ios, width_ios, height_ios, encodedImage);
+}
+
+
+// for AR
+cameraPickerScreenshot = function() {
+  const data = publisher.getImgData();
+  const canvas = document.createElement('canvas');
+  const img = document.createElement("img");
+  img.src = 'data:image/png;base64,' + data;
+  const paper = document.getElementById('paper');
+  paper.appendChild(img);
+  img.onload = function() {
+    console.log('whiteToTransparent');
+    canvas.width = img.offsetWidth;
+    canvas.height = img.offsetHeight;
+
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+
+    var heightOffset = (canvas.height - 550) / 2
+    var widthOffset = (canvas.width - 320) / 2
+
+    var imageData = ctx.getImageData(widthOffset, heightOffset, 320, 550);
+
+    for (let i = 0; i < imageData.data.length; i += 4) {
+      //if it's white, turn it transparent
+      const threshold = 100;
+      if (imageData.data[i] > threshold && imageData.data[i+1] > threshold && imageData.data[i+2] > threshold) {
+          imageData.data[i+3] = 0;
+        }
+    }
+
+    // //ctx should automatically update since its passed by referenced
+    ctx.putImageData(imageData, 0, 0);
+
+    const encodedImage = canvas.toDataURL().replace('data:image/png;base64,', '');
+    Meteor.call('sendFullOverlay', session, encodedImage);
+  }
 }
 

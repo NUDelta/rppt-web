@@ -7302,6 +7302,9 @@
         t1 = this._jsObject;
         t2 = args == null ? null : P.List_List$from(new H.MappedListIterable(args, P.js___convertToJS$closure(), [null, null]), true, null);
         return P._convertToDart(t1[method].apply(t1, t2));
+      },
+      callMethod$1: function(method) {
+        return this.callMethod$2(method, null);
       }
     },
     JsFunction: {
@@ -7679,8 +7682,13 @@
         }
         if (cd.containsKey$1(361) && !this.camPresent) {
           P.print("showCamera");
-          J.$index$asx($.$get$context(), "Meteor").callMethod$2("call", ["showCamera", this.session]);
+          t1 = $.$get$context();
+          J.$index$asx(t1, "Meteor").callMethod$2("call", ["showCamera", this.session]);
           this.camPresent = true;
+          if (cd.containsKey$1(331)) {
+            P.print("call transparency");
+            t1.callMethod$1("cameraPickerScreenshot");
+          }
         } else if (this.camPresent && !cd.containsKey$1(361)) {
           P.print("hideCamera");
           J.$index$asx($.$get$context(), "Meteor").callMethod$2("call", ["hideCamera", this.session]);

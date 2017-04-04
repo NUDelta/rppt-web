@@ -211,6 +211,7 @@ class RPPT {
       cd.remove(e);
     }
 
+
     //check for code triggers
     // keyboard – topcode 31
     if (cd.containsKey(31) && !kbPresent){
@@ -229,6 +230,11 @@ class RPPT {
       print('showCamera');
       context['Meteor'].callMethod('call', ['showCamera', session]);
       camPresent = true;
+       // call screenshot for multi-fidelity overlay
+      if (cd.containsKey(331)) {
+        print('call transparency');
+        context.callMethod('cameraPickerScreenshot');
+      }
     }
     else if (camPresent && !cd.containsKey(361)){
       print('hideCamera');

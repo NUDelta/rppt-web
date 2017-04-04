@@ -140,6 +140,10 @@ Meteor.methods({
       Messages.update({ session: session }, { $set: data });
     },
 
+    sendFullOverlay: function(session, image) {
+        Messages.update({ session: session }, { $set: { overlayedFullImage: image } });
+    }
+
 });
 
 function invertRole(role) {
