@@ -128,13 +128,14 @@ Meteor.methods({
         Messages.update({ session: session }, { $set: { keyboard: 'hide' } });
     },
 
-    sendOverlay: function(session, x, y, width, height, image) {
+    sendOverlay: function(session, x, y, width, height, image, isCameraOverlay) {
       const data = {
         overlayedImage_x: x.toString(),
         overlayedImage_y: y.toString(),
         overlayedImage_height: height.toString(),
         overlayedImage_width: width.toString(),
         overlayedImage: image,
+        isCameraOverlay: isCameraOverlay,
       };
       console.log("sending overlay");
       Messages.update({ session: session }, { $set: data });
