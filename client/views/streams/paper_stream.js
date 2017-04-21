@@ -34,4 +34,3 @@ Template.paperStream.rendered = function () {
     }
   });
 };
-

@@ -7302,6 +7302,9 @@
         t1 = this._jsObject;
         t2 = args == null ? null : P.List_List$from(new H.MappedListIterable(args, P.js___convertToJS$closure(), [null, null]), true, null);
         return P._convertToDart(t1[method].apply(t1, t2));
+      },
+      callMethod$1: function(method) {
+        return this.callMethod$2(method, null);
       }
     },
     JsFunction: {
