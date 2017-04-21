@@ -7677,10 +7677,15 @@
           J.$index$asx($.$get$context(), "Meteor").callMethod$2("call", ["hideKeyboard", this.session]);
           this.kbPresent = false;
         }
-        if (cd.containsKey$1(361) && !this.camPresent) {
-          P.print("showCamera");
-          J.$index$asx($.$get$context(), "Meteor").callMethod$2("call", ["showCamera", this.session]);
-          this.camPresent = true;
+        if (cd.containsKey$1(361)) {
+          if (cd.containsKey$1(331)) {
+            P.print("call transparency");
+            $.$get$context().callMethod$2("screenshot", [498.5, 145, 365, 509, 42, 15, 432, 554, "true"]);
+          } else if (!this.camPresent) {
+            P.print("showCamera");
+            J.$index$asx($.$get$context(), "Meteor").callMethod$2("call", ["showCamera", this.session]);
+            this.camPresent = true;
+          }
         } else if (this.camPresent && !cd.containsKey$1(361)) {
           P.print("hideCamera");
           J.$index$asx($.$get$context(), "Meteor").callMethod$2("call", ["hideCamera", this.session]);
@@ -7703,7 +7708,7 @@
           this.photoPresent = true;
           if (cd.containsKey$1(421) && this.callTransparency) {
             P.print("call transparency");
-            t5.callMethod$2("screenshot", [t4, t3, Math.abs(t4 - web.x1), height_web, t2, t1, width_ios, height_ios]);
+            t5.callMethod$2("screenshot", [t4, t3, Math.abs(t4 - web.x1), height_web, t2, t1, width_ios, height_ios, "false"]);
             this.callTransparency = false;
           }
         } else {
@@ -7734,7 +7739,7 @@
           J.$index$asx(t5, "Meteor").callMethod$2("call", ["map", this.session, t2, t1, height_ios, width_ios]);
           this.mapPresent = true;
           if (cd.containsKey$1(331))
-            t5.callMethod$2("screenshot", [t4, t3, Math.abs(t4 - web.x1), height_web, t2, t1, width_ios, height_ios]);
+            t5.callMethod$2("screenshot", [t4, t3, Math.abs(t4 - web.x1), height_web, t2, t1, width_ios, height_ios, "false"]);
         } else {
           if (this.mapPresent)
             t1 = !cd.containsKey$1(157) || !cd.containsKey$1(205) || !cd.containsKey$1(279) || !cd.containsKey$1(327);

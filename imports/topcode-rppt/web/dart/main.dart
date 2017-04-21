@@ -211,6 +211,7 @@ class RPPT {
       cd.remove(e);
     }
 
+
     //check for code triggers
     // keyboard – topcode 31
     if (cd.containsKey(31) && !kbPresent){
@@ -225,10 +226,17 @@ class RPPT {
     }
 
     // camera – 361
-    if (cd.containsKey(361) && !camPresent){
-      print('showCamera');
-      context['Meteor'].callMethod('call', ['showCamera', session]);
-      camPresent = true;
+    if (cd.containsKey(361)) {
+      if (cd.containsKey(331)) {
+        print('call transparency');
+        //Grabbed: 498.5 145 365.5 509.5 -42.44505494505494 14.609375 432.28021978021974 554.4050480769231 false
+        context.callMethod('screenshot', [498.5, 145, 365,
+        509, 42, 15, 432, 554, "true"]);
+        } else if (!camPresent) {
+          print('showCamera');
+          context['Meteor'].callMethod('call', ['showCamera', session]);
+          camPresent = true;
+        }
     }
     else if (camPresent && !cd.containsKey(361)){
       print('hideCamera');
@@ -262,7 +270,7 @@ class RPPT {
         // web.x1's value will always be > web.x2
         context.callMethod('screenshot',
             [web.x2, web.y1, width_web, height_web,
-            ios.x1, ios.y1, width_ios, height_ios]);
+            ios.x1, ios.y1, width_ios, height_ios, "false"]);
         callTransparency = false;
       }
     } else if (photoPresent && (!cd.containsKey(93) || !cd.containsKey(155) || !cd.containsKey(203) || !cd.containsKey(271)) ){
@@ -296,7 +304,7 @@ class RPPT {
        // call screenshot for multi-fidelity overlay
       if (cd.containsKey(331)) {
         context.callMethod('screenshot', [web.x2, web.y1, width_web,
-        height_web, ios.x1, ios.y1, width_ios, height_ios]);
+        height_web, ios.x1, ios.y1, width_ios, height_ios, "false"]);
       }
     } else if (mapPresent && (!cd.containsKey(157) || !cd.containsKey(205) || !cd.containsKey(279) || !cd.containsKey(327)) ){
       print('hide map');
