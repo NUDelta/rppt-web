@@ -77,8 +77,8 @@ class RPPT {
 
 
   RPPT() {
+    print('dart: timeout completed');
     CanvasElement canvas = querySelector("#video-canvas");
-    print(canvas);
     ctx = canvas.getContext("2d");
     scanner = new Scanner();
     video = querySelector("#video-stream");

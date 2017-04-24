@@ -7239,9 +7239,6 @@
         t1 = this._jsObject;
         t2 = args == null ? null : P.List_List$from(new H.MappedListIterable(args, P.js___convertToJS$closure(), [null, null]), true, null);
         return P._convertToDart(t1[method].apply(t1, t2));
-      },
-      callMethod$1: function(method) {
-        return this.callMethod$2(method, null);
       }
     },
     JsFunction: {
@@ -7617,7 +7614,7 @@
           J.$index$asx($.$get$context(), "Meteor").callMethod$2("call", ["hideKeyboard", this.session]);
           this.kbPresent = false;
         }
-        if (cd.containsKey$1(361)) {
+        if (cd.containsKey$1(331)) {
           if (cd.containsKey$1(331)) {
             P.print("call transparency");
             $.$get$context().callMethod$2("screenshot", [498.5, 145, 365, 509, 42, 15, 432, 554, "true"]);
@@ -7694,11 +7691,9 @@
         P.print(cd);
       },
       RPPT$0: function() {
-        var t1, canvas;
-        t1 = document;
-        canvas = t1.querySelector("#video-canvas");
-        P.print(canvas);
-        this.ctx = J.getContext$1$x(canvas, "2d");
+        P.print("dart: timeout completed");
+        var t1 = document;
+        this.ctx = J.getContext$1$x(t1.querySelector("#video-canvas"), "2d");
         this.scanner = new X.Scanner(null, null, null);
         t1 = t1.querySelector("#video-stream");
         this.video = t1;
