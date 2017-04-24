@@ -307,8 +307,6 @@
       if (targetPrototype.hasOwnProperty("$deferredAction"))
         chain = targetPrototype.$deferredAction;
       return function foo() {
-        if (!supportsDirectProtoAccess)
-          return;
         var prototype = this;
         while (!prototype.hasOwnProperty("$deferredAction"))
           prototype = prototype.__proto__;
@@ -782,28 +780,31 @@
       "^": "JSArray;$ti"
     },
     ArrayIterator: {
-      "^": "Object;_iterable,_length,_index,_current",
+      "^": "Object;__interceptors$_iterable,__interceptors$_length,__interceptors$_index,__interceptors$_current",
       get$current: function() {
-        return this._current;
+        return this.__interceptors$_current;
       },
       moveNext$0: function() {
         var t1, $length, t2;
-        t1 = this._iterable;
+        t1 = this.__interceptors$_iterable;
         $length = t1.length;
-        if (this._length !== $length)
+        if (this.__interceptors$_length !== $length)
           throw H.wrapException(H.throwConcurrentModificationError(t1));
-        t2 = this._index;
+        t2 = this.__interceptors$_index;
         if (t2 >= $length) {
-          this._current = null;
+          this.__interceptors$_current = null;
           return false;
         }
-        this._current = t1[t2];
-        this._index = t2 + 1;
+        this.__interceptors$_current = t1[t2];
+        this.__interceptors$_index = t2 + 1;
         return true;
       }
     },
     JSNumber: {
       "^": "Interceptor;",
+      remainder$1: function(receiver, b) {
+        return receiver % b;
+      },
       abs$0: function(receiver) {
         return Math.abs(receiver);
       },
@@ -933,7 +934,7 @@
     JSInt: {
       "^": "JSNumber;",
       $isnum: 1,
-      $isint: 1
+      $is$int: 1
     },
     JSDouble: {
       "^": "JSNumber;",
@@ -1036,34 +1037,34 @@
       }
     },
     ListIterator: {
-      "^": "Object;__internal$_iterable,__internal$_length,__internal$_index,__internal$_current",
+      "^": "Object;_iterable,_length,_index,_current",
       get$current: function() {
-        return this.__internal$_current;
+        return this._current;
       },
       moveNext$0: function() {
         var t1, t2, $length, t3;
-        t1 = this.__internal$_iterable;
+        t1 = this._iterable;
         t2 = J.getInterceptor$asx(t1);
         $length = t2.get$length(t1);
-        if (this.__internal$_length !== $length)
+        if (this._length !== $length)
           throw H.wrapException(new P.ConcurrentModificationError(t1));
-        t3 = this.__internal$_index;
+        t3 = this._index;
         if (t3 >= $length) {
-          this.__internal$_current = null;
+          this._current = null;
           return false;
         }
-        this.__internal$_current = t2.elementAt$1(t1, t3);
-        ++this.__internal$_index;
+        this._current = t2.elementAt$1(t1, t3);
+        ++this._index;
         return true;
       }
     },
     MappedIterable: {
-      "^": "Iterable;__internal$_iterable,_f,$ti",
+      "^": "Iterable;_iterable,_f,$ti",
       get$iterator: function(_) {
-        return new H.MappedIterator(null, J.get$iterator$ax(this.__internal$_iterable), this._f, this.$ti);
+        return new H.MappedIterator(null, J.get$iterator$ax(this._iterable), this._f, this.$ti);
       },
       get$length: function(_) {
-        return J.get$length$asx(this.__internal$_iterable);
+        return J.get$length$asx(this._iterable);
       },
       $asIterable: function($S, $T) {
         return [$T];
@@ -1077,25 +1078,25 @@
       }
     },
     EfficientLengthMappedIterable: {
-      "^": "MappedIterable;__internal$_iterable,_f,$ti",
+      "^": "MappedIterable;_iterable,_f,$ti",
       $isEfficientLengthIterable: 1,
       $asEfficientLengthIterable: function($S, $T) {
         return [$T];
       }
     },
     MappedIterator: {
-      "^": "Iterator;__internal$_current,_iterator,_f,$ti",
+      "^": "Iterator;_current,_iterator,_f,$ti",
       moveNext$0: function() {
         var t1 = this._iterator;
         if (t1.moveNext$0()) {
-          this.__internal$_current = this._f.call$1(t1.get$current());
+          this._current = this._f.call$1(t1.get$current());
           return true;
         }
-        this.__internal$_current = null;
+        this._current = null;
         return false;
       },
       get$current: function() {
-        return this.__internal$_current;
+        return this._current;
       }
     },
     MappedListIterable: {
@@ -1120,18 +1121,18 @@
       "^": "Object;$ti"
     },
     Symbol: {
-      "^": "Object;__internal$_name<",
+      "^": "Object;_name<",
       $eq: function(_, other) {
         if (other == null)
           return false;
-        return other instanceof H.Symbol && J.$eq$(this.__internal$_name, other.__internal$_name);
+        return other instanceof H.Symbol && J.$eq$(this._name, other._name);
       },
       get$hashCode: function(_) {
         var hash, t1;
         hash = this._hashCode;
         if (hash != null)
           return hash;
-        t1 = J.get$hashCode$(this.__internal$_name);
+        t1 = J.get$hashCode$(this._name);
         if (typeof t1 !== "number")
           return H.iae(t1);
         hash = 536870911 & 664597 * t1;
@@ -1139,7 +1140,7 @@
         return hash;
       },
       toString$0: function(_) {
-        return 'Symbol("' + H.S(this.__internal$_name) + '")';
+        return 'Symbol("' + H.S(this._name) + '")';
       }
     }
   }], ["_isolate_helper", "dart:_isolate_helper",, H, {
@@ -1176,7 +1177,7 @@
       t2.supportsWorkers = t4;
       t2.fromCommandLine = t3 && t5;
       t2.topEventLoop = new H._EventLoop(P.ListQueue$(null, H._IsolateEvent), 0);
-      t3 = P.int;
+      t3 = P.$int;
       t2.isolates = new H.JsLinkedHashMap(0, null, null, null, null, null, 0, [t3, H._IsolateContext]);
       t2.managers = new H.JsLinkedHashMap(0, null, null, null, null, null, 0, [t3, null]);
       if (t2.isWorker === true) {
@@ -1261,7 +1262,7 @@
           startPaused = t1.$index(msg, "startPaused");
           replyTo = new H._Deserializer(true, []).deserialize$1(t1.$index(msg, "replyTo"));
           t1 = init.globalState.nextIsolateId++;
-          t2 = P.int;
+          t2 = P.$int;
           t3 = new H.JsLinkedHashMap(0, null, null, null, null, null, 0, [t2, H.RawReceivePortImpl]);
           t2 = P.LinkedHashSet_LinkedHashSet(null, null, null, t2);
           t4 = new H.RawReceivePortImpl(0, null, false);
@@ -1291,7 +1292,7 @@
           if (init.globalState.isWorker === true) {
             t1 = init.globalState.mainManager;
             t2 = P.LinkedHashMap__makeLiteral(["command", "print", "msg", msg]);
-            t2 = new H._Serializer(true, P._LinkedIdentityHashMap__LinkedIdentityHashMap$es6(null, P.int)).serialize$1(t2);
+            t2 = new H._Serializer(true, P._LinkedIdentityHashMap__LinkedIdentityHashMap$es6(null, P.$int)).serialize$1(t2);
             t1.toString;
             self.postMessage(t2);
           } else
@@ -1306,7 +1307,7 @@
       if (init.globalState.isWorker === true) {
         t1 = init.globalState.mainManager;
         t2 = P.LinkedHashMap__makeLiteral(["command", "log", "msg", msg]);
-        t2 = new H._Serializer(true, P._LinkedIdentityHashMap__LinkedIdentityHashMap$es6(null, P.int)).serialize$1(t2);
+        t2 = new H._Serializer(true, P._LinkedIdentityHashMap__LinkedIdentityHashMap$es6(null, P.$int)).serialize$1(t2);
         t1.toString;
         self.postMessage(t2);
       } else
@@ -1336,7 +1337,7 @@
         t2.call$0();
     },
     _clone: function(message) {
-      return new H._Deserializer(true, []).deserialize$1(new H._Serializer(false, P._LinkedIdentityHashMap__LinkedIdentityHashMap$es6(null, P.int)).serialize$1(message));
+      return new H._Deserializer(true, []).deserialize$1(new H._Serializer(false, P._LinkedIdentityHashMap__LinkedIdentityHashMap$es6(null, P.$int)).serialize$1(message));
     },
     startRootIsolate_closure: {
       "^": "Closure:0;_box_0,entry",
@@ -1355,7 +1356,7 @@
       static: {
         _Manager__serializePrintMessage: [function(object) {
           var t1 = P.LinkedHashMap__makeLiteral(["command", "print", "msg", object]);
-          return new H._Serializer(true, P._LinkedIdentityHashMap__LinkedIdentityHashMap$es6(null, P.int)).serialize$1(t1);
+          return new H._Serializer(true, P._LinkedIdentityHashMap__LinkedIdentityHashMap$es6(null, P.$int)).serialize$1(t1);
         }, null, null, 2, 0, null, 9]
       }
     },
@@ -1577,7 +1578,7 @@
         if (t1 != null)
           t1.clear$0(0);
         for (t1 = this.ports, t2 = t1.get$values(t1), t2 = t2.get$iterator(t2); t2.moveNext$0();)
-          t2.get$current()._close$0();
+          t2.get$current().__isolate_helper$_close$0();
         t1.clear$0(0);
         this.weakPorts.clear$0(0);
         init.globalState.isolates.remove$1(0, this.id);
@@ -1634,7 +1635,7 @@
           if (t2) {
             t1 = t1.mainManager;
             t2 = P.LinkedHashMap__makeLiteral(["command", "close"]);
-            t2 = new H._Serializer(true, new P._LinkedIdentityHashMap(0, null, null, null, null, null, 0, [null, P.int])).serialize$1(t2);
+            t2 = new H._Serializer(true, new P._LinkedIdentityHashMap(0, null, null, null, null, null, 0, [null, P.$int])).serialize$1(t2);
             t1.toString;
             self.postMessage(t2);
           }
@@ -1663,7 +1664,7 @@
             trace = H.getTraceFromException(exception);
             t1 = init.globalState.mainManager;
             t2 = P.LinkedHashMap__makeLiteral(["command", "error", "msg", H.S(e) + "\n" + H.S(trace)]);
-            t2 = new H._Serializer(true, P._LinkedIdentityHashMap__LinkedIdentityHashMap$es6(null, P.int)).serialize$1(t2);
+            t2 = new H._Serializer(true, P._LinkedIdentityHashMap__LinkedIdentityHashMap$es6(null, P.$int)).serialize$1(t2);
             t1.toString;
             self.postMessage(t2);
           }
@@ -1760,7 +1761,7 @@
       send$1: function(_, message) {
         var t1, workerMessage, manager;
         t1 = P.LinkedHashMap__makeLiteral(["command", "message", "port", this, "msg", message]);
-        workerMessage = new H._Serializer(true, P._LinkedIdentityHashMap__LinkedIdentityHashMap$es6(null, P.int)).serialize$1(t1);
+        workerMessage = new H._Serializer(true, P._LinkedIdentityHashMap__LinkedIdentityHashMap$es6(null, P.$int)).serialize$1(t1);
         if (init.globalState.isWorker === true) {
           init.globalState.mainManager.toString;
           self.postMessage(workerMessage);
@@ -1787,7 +1788,7 @@
     },
     RawReceivePortImpl: {
       "^": "Object;_id<,_handler,_isClosed<",
-      _close$0: function() {
+      __isolate_helper$_close$0: function() {
         this._isClosed = true;
         this._handler = null;
       },
@@ -2570,7 +2571,8 @@
       }
       $prototype.constructor = $constructor;
       $constructor.prototype = $prototype;
-      if (!isStatic) {
+      t1 = !isStatic;
+      if (t1) {
         isIntercepted = jsArguments.length == 1 && true;
         trampoline = H.Closure_forwardCallTo(receiver, $function, isIntercepted);
         trampoline.$reflectionInfo = reflectionInfo;
@@ -2585,18 +2587,14 @@
             return getType(t);
           };
         }(H.getType, functionType);
-      else if (typeof functionType == "function")
-        if (isStatic)
-          signatureFunction = functionType;
-        else {
-          getReceiver = isIntercepted ? H.BoundClosure_receiverOf : H.BoundClosure_selfOf;
-          signatureFunction = function(f, r) {
-            return function() {
-              return f.apply({$receiver: r(this)}, arguments);
-            };
-          }(functionType, getReceiver);
-        }
-      else
+      else if (t1 && typeof functionType == "function") {
+        getReceiver = isIntercepted ? H.BoundClosure_receiverOf : H.BoundClosure_selfOf;
+        signatureFunction = function(f, r) {
+          return function() {
+            return f.apply({$receiver: r(this)}, arguments);
+          };
+        }(functionType, getReceiver);
+      } else
         throw H.wrapException("Error in reflectionInfo.");
       $prototype.$signature = signatureFunction;
       $prototype[callName] = trampoline;
@@ -2786,11 +2784,7 @@
       return H.Closure_fromTearOff(receiver, functions, t1, !!isStatic, jsArguments, $name);
     },
     throwCyclicInit: function(staticName) {
-      throw H.wrapException(new P.CyclicInitializationError(staticName));
-    },
-    extractFunctionTypeObjectFrom: function(o) {
-      var interceptor = J.getInterceptor(o);
-      return "$signature" in interceptor ? interceptor.$signature() : null;
+      throw H.wrapException(new P.CyclicInitializationError("Cyclic initialization for static " + H.S(staticName)));
     },
     buildFunctionType: function(returnType, parameterTypes, optionalParameterTypes) {
       return new H.RuntimeFunctionType(returnType, parameterTypes, optionalParameterTypes, null);
@@ -2831,55 +2825,16 @@
       return rti == null ? null : rti[index];
     },
     runtimeTypeToString: function(rti, onTypeVariable) {
-      var typedefInfo;
       if (rti == null)
         return "dynamic";
-      if (typeof rti === "object" && rti !== null && rti.constructor === Array)
+      else if (typeof rti === "object" && rti !== null && rti.constructor === Array)
         return rti[0].builtin$cls + H.joinArguments(rti, 1, onTypeVariable);
-      if (typeof rti == "function")
+      else if (typeof rti == "function")
         return rti.builtin$cls;
-      if (typeof rti === "number" && Math.floor(rti) === rti)
-        return H.S(rti);
-      if (typeof rti.func != "undefined") {
-        typedefInfo = rti.typedef;
-        if (typedefInfo != null)
-          return H.runtimeTypeToString(typedefInfo, onTypeVariable);
-        return H._functionRtiToString(rti, onTypeVariable);
-      }
-      return "unknown-reified-type";
-    },
-    _functionRtiToString: function(rti, onTypeVariable) {
-      var returnTypeText, $arguments, t1, argumentsText, sep, _i, argument, optionalArguments, namedArguments, t2, $name;
-      returnTypeText = !!rti.v ? "void" : H.runtimeTypeToString(rti.ret, onTypeVariable);
-      if ("args" in rti) {
-        $arguments = rti.args;
-        for (t1 = $arguments.length, argumentsText = "", sep = "", _i = 0; _i < t1; ++_i, sep = ", ") {
-          argument = $arguments[_i];
-          argumentsText = argumentsText + sep + H.runtimeTypeToString(argument, onTypeVariable);
-        }
-      } else {
-        argumentsText = "";
-        sep = "";
-      }
-      if ("opt" in rti) {
-        optionalArguments = rti.opt;
-        argumentsText += sep + "[";
-        for (t1 = optionalArguments.length, sep = "", _i = 0; _i < t1; ++_i, sep = ", ") {
-          argument = optionalArguments[_i];
-          argumentsText = argumentsText + sep + H.runtimeTypeToString(argument, onTypeVariable);
-        }
-        argumentsText += "]";
-      }
-      if ("named" in rti) {
-        namedArguments = rti.named;
-        argumentsText += sep + "{";
-        for (t1 = H.extractKeys(namedArguments), t2 = t1.length, sep = "", _i = 0; _i < t2; ++_i, sep = ", ") {
-          $name = t1[_i];
-          argumentsText = argumentsText + sep + H.runtimeTypeToString(namedArguments[$name], onTypeVariable) + (" " + H.S($name));
-        }
-        argumentsText += "}";
-      }
-      return "(" + argumentsText + ") => " + returnTypeText;
+      else if (typeof rti === "number" && Math.floor(rti) === rti)
+        return C.JSInt_methods.toString$0(rti);
+      else
+        return;
     },
     joinArguments: function(types, startIndex, onTypeVariable) {
       var buffer, index, firstArgument, allDynamic, t1, argument;
@@ -2894,7 +2849,7 @@
         argument = types[index];
         if (argument != null)
           allDynamic = false;
-        t1 = buffer._contents += H.runtimeTypeToString(argument, onTypeVariable);
+        t1 = buffer._contents += H.S(H.runtimeTypeToString(argument, onTypeVariable));
       }
       return allDynamic ? "" : "<" + buffer.toString$0(0) + ">";
     },
@@ -2929,12 +2884,10 @@
         return true;
       if (s == null || t == null)
         return true;
-      if (s.builtin$cls === "Null")
-        return true;
       if ('func' in t)
         return H.isFunctionSubtype(s, t);
       if ('func' in s)
-        return t.builtin$cls === "Function" || t.builtin$cls === "Object";
+        return t.builtin$cls === "Function";
       t1 = typeof s === "object" && s !== null && s.constructor === Array;
       typeOfS = t1 ? s[0] : s;
       t2 = typeof t === "object" && t !== null && t.constructor === Array;
@@ -2943,7 +2896,7 @@
         typeOfTString = H.runtimeTypeToString(typeOfT, null);
         if (!('$is' + typeOfTString in typeOfS.prototype))
           return false;
-        substitution = typeOfS.prototype["$as" + typeOfTString];
+        substitution = typeOfS.prototype["$as" + H.S(typeOfTString)];
       } else
         substitution = null;
       if (!t1 && substitution == null || !t2)
@@ -3494,7 +3447,7 @@
       }
     },
     BoundClosure: {
-      "^": "TearOffClosure;_self,_target,_receiver,_name",
+      "^": "TearOffClosure;_self,__js_helper$_target,_receiver,__js_helper$_name",
       $eq: function(_, other) {
         if (other == null)
           return false;
@@ -3502,7 +3455,7 @@
           return true;
         if (!(other instanceof H.BoundClosure))
           return false;
-        return this._self === other._self && this._target === other._target && this._receiver === other._receiver;
+        return this._self === other._self && this.__js_helper$_target === other.__js_helper$_target && this._receiver === other._receiver;
       },
       get$hashCode: function(_) {
         var t1, receiverHashCode;
@@ -3511,13 +3464,13 @@
           receiverHashCode = H.Primitives_objectHashCode(this._self);
         else
           receiverHashCode = typeof t1 !== "object" ? J.get$hashCode$(t1) : H.Primitives_objectHashCode(t1);
-        return J.$xor$n(receiverHashCode, H.Primitives_objectHashCode(this._target));
+        return J.$xor$n(receiverHashCode, H.Primitives_objectHashCode(this.__js_helper$_target));
       },
       toString$0: function(_) {
         var receiver = this._receiver;
         if (receiver == null)
           receiver = this._self;
-        return "Closure '" + H.S(this._name) + "' of " + H.Primitives_objectToHumanReadableString(receiver);
+        return "Closure '" + H.S(this.__js_helper$_name) + "' of " + H.Primitives_objectToHumanReadableString(receiver);
       },
       static: {
         BoundClosure_selfOf: function(closure) {
@@ -3560,8 +3513,12 @@
     RuntimeFunctionType: {
       "^": "RuntimeType;returnType,parameterTypes,optionalParameterTypes,namedParameters",
       _isTest$1: function(expression) {
-        var functionTypeObject = H.extractFunctionTypeObjectFrom(expression);
+        var functionTypeObject = this._extractFunctionTypeObjectFrom$1(expression);
         return functionTypeObject == null ? false : H.isFunctionSubtype(functionTypeObject, this.toRti$0());
+      },
+      _extractFunctionTypeObjectFrom$1: function(o) {
+        var interceptor = J.getInterceptor(o);
+        return "$signature" in interceptor ? interceptor.$signature() : null;
       },
       toRti$0: function() {
         var result, t1, t2, namedRti, keys, i, $name;
@@ -4050,10 +4007,10 @@
       $asJavaScriptIndexingBehavior: Isolate.functionThatReturnsNull,
       $asJSIndexable: Isolate.functionThatReturnsNull,
       $asList: function() {
-        return [P.double];
+        return [P.$double];
       },
       $asEfficientLengthIterable: function() {
-        return [P.double];
+        return [P.$double];
       },
       $isList: 1,
       $isEfficientLengthIterable: 1
@@ -4063,10 +4020,10 @@
       $asJavaScriptIndexingBehavior: Isolate.functionThatReturnsNull,
       $asJSIndexable: Isolate.functionThatReturnsNull,
       $asList: function() {
-        return [P.double];
+        return [P.$double];
       },
       $asEfficientLengthIterable: function() {
-        return [P.double];
+        return [P.$double];
       }
     },
     NativeTypedArrayOfInt: {
@@ -4078,11 +4035,11 @@
       },
       $isList: 1,
       $asList: function() {
-        return [P.int];
+        return [P.$int];
       },
       $isEfficientLengthIterable: 1,
       $asEfficientLengthIterable: function() {
-        return [P.int];
+        return [P.$int];
       }
     },
     NativeTypedArray_ListMixin0: {
@@ -4090,10 +4047,10 @@
       $asJavaScriptIndexingBehavior: Isolate.functionThatReturnsNull,
       $asJSIndexable: Isolate.functionThatReturnsNull,
       $asList: function() {
-        return [P.int];
+        return [P.$int];
       },
       $asEfficientLengthIterable: function() {
-        return [P.int];
+        return [P.$int];
       },
       $isList: 1,
       $isEfficientLengthIterable: 1
@@ -4103,10 +4060,10 @@
       $asJavaScriptIndexingBehavior: Isolate.functionThatReturnsNull,
       $asJSIndexable: Isolate.functionThatReturnsNull,
       $asList: function() {
-        return [P.int];
+        return [P.$int];
       },
       $asEfficientLengthIterable: function() {
-        return [P.int];
+        return [P.$int];
       }
     },
     NativeFloat32List: {
@@ -4114,11 +4071,11 @@
       $isTypedData: 1,
       $isList: 1,
       $asList: function() {
-        return [P.double];
+        return [P.$double];
       },
       $isEfficientLengthIterable: 1,
       $asEfficientLengthIterable: function() {
-        return [P.double];
+        return [P.$double];
       },
       "%": "Float32Array"
     },
@@ -4127,11 +4084,11 @@
       $isTypedData: 1,
       $isList: 1,
       $asList: function() {
-        return [P.double];
+        return [P.$double];
       },
       $isEfficientLengthIterable: 1,
       $asEfficientLengthIterable: function() {
-        return [P.double];
+        return [P.$double];
       },
       "%": "Float64Array"
     },
@@ -4145,11 +4102,11 @@
       $isTypedData: 1,
       $isList: 1,
       $asList: function() {
-        return [P.int];
+        return [P.$int];
       },
       $isEfficientLengthIterable: 1,
       $asEfficientLengthIterable: function() {
-        return [P.int];
+        return [P.$int];
       },
       "%": "Int16Array"
     },
@@ -4163,11 +4120,11 @@
       $isTypedData: 1,
       $isList: 1,
       $asList: function() {
-        return [P.int];
+        return [P.$int];
       },
       $isEfficientLengthIterable: 1,
       $asEfficientLengthIterable: function() {
-        return [P.int];
+        return [P.$int];
       },
       "%": "Int32Array"
     },
@@ -4181,11 +4138,11 @@
       $isTypedData: 1,
       $isList: 1,
       $asList: function() {
-        return [P.int];
+        return [P.$int];
       },
       $isEfficientLengthIterable: 1,
       $asEfficientLengthIterable: function() {
-        return [P.int];
+        return [P.$int];
       },
       "%": "Int8Array"
     },
@@ -4199,11 +4156,11 @@
       $isTypedData: 1,
       $isList: 1,
       $asList: function() {
-        return [P.int];
+        return [P.$int];
       },
       $isEfficientLengthIterable: 1,
       $asEfficientLengthIterable: function() {
-        return [P.int];
+        return [P.$int];
       },
       "%": "Uint16Array"
     },
@@ -4217,11 +4174,11 @@
       $isTypedData: 1,
       $isList: 1,
       $asList: function() {
-        return [P.int];
+        return [P.$int];
       },
       $isEfficientLengthIterable: 1,
       $asEfficientLengthIterable: function() {
-        return [P.int];
+        return [P.$int];
       },
       "%": "Uint32Array"
     },
@@ -4238,11 +4195,11 @@
       $isTypedData: 1,
       $isList: 1,
       $asList: function() {
-        return [P.int];
+        return [P.$int];
       },
       $isEfficientLengthIterable: 1,
       $asEfficientLengthIterable: function() {
-        return [P.int];
+        return [P.$int];
       },
       "%": "CanvasPixelArray|Uint8ClampedArray"
     },
@@ -4259,11 +4216,11 @@
       $isTypedData: 1,
       $isList: 1,
       $asList: function() {
-        return [P.int];
+        return [P.$int];
       },
       $isEfficientLengthIterable: 1,
       $asEfficientLengthIterable: function() {
-        return [P.int];
+        return [P.$int];
       },
       "%": ";Uint8Array"
     }
@@ -5003,7 +4960,7 @@
       get$length: function(_) {
         var t1, future;
         t1 = {};
-        future = new P._Future(0, $.Zone__current, null, [P.int]);
+        future = new P._Future(0, $.Zone__current, null, [P.$int]);
         t1.count = 0;
         this.listen$4$cancelOnError$onDone$onError(new P.Stream_length_closure(t1), true, new P.Stream_length_closure0(t1, future), future.get$_completeError());
         return future;
@@ -5053,7 +5010,7 @@
       "^": "Object;"
     },
     _BufferingStreamSubscription: {
-      "^": "Object;_zone<,_state<,$ti",
+      "^": "Object;_zone<,_state<",
       pause$1: function(_, resumeSignal) {
         var t1 = this._state;
         if ((t1 & 8) !== 0)
@@ -5118,7 +5075,7 @@
         if (t1 < 32)
           this._sendData$1(data);
         else
-          this._addPending$1(new P._DelayedData(data, null, [H.getRuntimeTypeArgument(this, "_BufferingStreamSubscription", 0)]));
+          this._addPending$1(new P._DelayedData(data, null, [null]));
       }],
       _addError$2: ["super$_BufferingStreamSubscription$_addError", function(error, stackTrace) {
         var t1 = this._state;
@@ -5129,7 +5086,7 @@
         else
           this._addPending$1(new P._DelayedError(error, stackTrace, null));
       }],
-      _async$_close$0: function() {
+      _close$0: function() {
         var t1 = this._state;
         if ((t1 & 8) !== 0)
           return;
@@ -5151,7 +5108,7 @@
         var pending, t1;
         pending = this._pending;
         if (pending == null) {
-          pending = new P._StreamImplEvents(null, null, 0, [H.getRuntimeTypeArgument(this, "_BufferingStreamSubscription", 0)]);
+          pending = new P._StreamImplEvents(null, null, 0, [null]);
           this._pending = pending;
         }
         pending.add$1(0, $event);
@@ -5256,7 +5213,7 @@
         if ((t1 & 64) !== 0 && t1 < 128)
           this._pending.schedule$1(this);
       },
-      _BufferingStreamSubscription$4: function(onData, onError, onDone, cancelOnError, $T) {
+      _BufferingStreamSubscription$4: function(onData, onError, onDone, cancelOnError) {
         var handleData, t1;
         handleData = onData == null ? P.async___nullDataHandler$closure() : onData;
         t1 = this._zone;
@@ -5442,13 +5399,10 @@
         this._stream._handleError$3(error, stackTrace, this);
       }, "call$2", "get$_handleError", 4, 0, 11, 0, 1],
       _handleDone$0: [function() {
-        this._async$_close$0();
+        this._close$0();
       }, "call$0", "get$_handleDone", 0, 0, 1],
       _ForwardingStreamSubscription$5: function(_stream, onData, onError, onDone, cancelOnError, $S, $T) {
         this._subscription = this._stream._async$_source.listen$3$onDone$onError(this.get$_handleData(), this.get$_handleDone(), this.get$_handleError());
-      },
-      $as_BufferingStreamSubscription: function($S, $T) {
-        return [$T];
       },
       static: {
         _ForwardingStreamSubscription$: function(_stream, onData, onError, onDone, cancelOnError, $S, $T) {
@@ -5456,7 +5410,7 @@
           t1 = $.Zone__current;
           t2 = cancelOnError ? 1 : 0;
           t2 = new P._ForwardingStreamSubscription(_stream, null, null, null, null, t1, t2, null, null, [$S, $T]);
-          t2._BufferingStreamSubscription$4(onData, onError, onDone, cancelOnError, $T);
+          t2._BufferingStreamSubscription$4(onData, onError, onDone, cancelOnError);
           t2._ForwardingStreamSubscription$5(_stream, onData, onError, onDone, cancelOnError, $S, $T);
           return t2;
         }
@@ -6057,7 +6011,7 @@
         return this.$index(receiver, index);
       },
       map$1: function(receiver, f) {
-        return new H.MappedListIterable(receiver, f, [H.getRuntimeTypeArgument(receiver, "ListMixin", 0), null]);
+        return new H.MappedListIterable(receiver, f, [null, null]);
       },
       toString$0: function(receiver) {
         return P.IterableBase_iterableToFullString(receiver, "[", "]");
@@ -6281,7 +6235,7 @@
         t1 = this.sb;
         t2 = this._box_0;
         t1._contents += t2.comma;
-        t3 = t1._contents += H.S(key.get$__internal$_name());
+        t3 = t1._contents += H.S(key.get$_name());
         t1._contents = t3 + ": ";
         t1._contents += H.S(P.Error_safeToString(value));
         t2.comma = ", ";
@@ -6359,7 +6313,7 @@
         }
       }
     },
-    double: {
+    $double: {
       "^": "num;"
     },
     "+double": 0,
@@ -6403,9 +6357,9 @@
         t2 = this._duration;
         if (t2 < 0)
           return "-" + new P.Duration(-t2).toString$0(0);
-        twoDigitMinutes = t1.call$1(C.JSInt_methods._tdivFast$1(t2, 60000000) % 60);
-        twoDigitSeconds = t1.call$1(C.JSInt_methods._tdivFast$1(t2, 1000000) % 60);
-        sixDigitUs = new P.Duration_toString_sixDigits().call$1(t2 % 1000000);
+        twoDigitMinutes = t1.call$1(C.JSInt_methods.remainder$1(C.JSInt_methods._tdivFast$1(t2, 60000000), 60));
+        twoDigitSeconds = t1.call$1(C.JSInt_methods.remainder$1(C.JSInt_methods._tdivFast$1(t2, 1000000), 60));
+        sixDigitUs = new P.Duration_toString_sixDigits().call$1(C.JSInt_methods.remainder$1(t2, 1000000));
         return "" + C.JSInt_methods._tdivFast$1(t2, 3600000000) + ":" + H.S(twoDigitMinutes) + ":" + H.S(twoDigitSeconds) + "." + H.S(sixDigitUs);
       },
       abs$0: function(_) {
@@ -6563,7 +6517,7 @@
         this._namedArguments.forEach$1(0, new P.NoSuchMethodError_toString_closure(t1, sb));
         receiverText = P.Error_safeToString(this._core$_receiver);
         actualParameters = sb.toString$0(0);
-        return "NoSuchMethodError: method not found: '" + H.S(this._memberName.__internal$_name) + "'\nReceiver: " + H.S(receiverText) + "\nArguments: [" + actualParameters + "]";
+        return "NoSuchMethodError: method not found: '" + H.S(this._memberName._name) + "'\nReceiver: " + H.S(receiverText) + "\nArguments: [" + actualParameters + "]";
       },
       static: {
         NoSuchMethodError$: function(receiver, memberName, positionalArguments, namedArguments, existingArgumentNames) {
@@ -6612,8 +6566,7 @@
     CyclicInitializationError: {
       "^": "Error;variableName",
       toString$0: function(_) {
-        var t1 = this.variableName;
-        return t1 == null ? "Reading static variable during its initialization" : "Reading static variable '" + H.S(t1) + "' during its initialization";
+        return "Reading static variable '" + this.variableName + "' during its initialization";
       }
     },
     _Exception: {
@@ -6662,7 +6615,7 @@
         }
       }
     },
-    int: {
+    $int: {
       "^": "num;"
     },
     "+int": 0,
@@ -6712,9 +6665,6 @@
     "+List": 0,
     Null: {
       "^": "Object;",
-      get$hashCode: function(_) {
-        return P.Object.prototype.get$hashCode.call(this, this);
-      },
       toString$0: function(_) {
         return "null";
       }
@@ -6795,6 +6745,8 @@
       var t1 = $.Zone__current;
       if (t1 === C.C__RootZone)
         return callback;
+      if (callback == null)
+        return;
       return t1.bindUnaryCallback$2$runGuarded(callback, true);
     },
     HtmlElement: {
@@ -7072,27 +7024,29 @@
     _EventStream: {
       "^": "Stream;$ti",
       listen$4$cancelOnError$onDone$onError: function(onData, cancelOnError, onDone, onError) {
-        return W._EventStreamSubscription$(this._html$_target, this._eventType, onData, false, H.getTypeArgumentByIndex(this, 0));
+        var t1 = new W._EventStreamSubscription(0, this._target, this._eventType, W._wrapZone(onData), false, this.$ti);
+        t1._tryResume$0();
+        return t1;
       },
       listen$3$onDone$onError: function(onData, onDone, onError) {
         return this.listen$4$cancelOnError$onDone$onError(onData, null, onDone, onError);
       }
     },
     _ElementEventStreamImpl: {
-      "^": "_EventStream;_html$_target,_eventType,_useCapture,$ti"
+      "^": "_EventStream;_target,_eventType,_useCapture,$ti"
     },
     _EventStreamSubscription: {
-      "^": "StreamSubscription;_pauseCount,_html$_target,_eventType,_onData,_useCapture,$ti",
+      "^": "StreamSubscription;_pauseCount,_target,_eventType,_onData,_useCapture,$ti",
       cancel$0: function() {
-        if (this._html$_target == null)
+        if (this._target == null)
           return;
         this._unlisten$0();
-        this._html$_target = null;
+        this._target = null;
         this._onData = null;
         return;
       },
       pause$1: function(_, resumeSignal) {
-        if (this._html$_target == null)
+        if (this._target == null)
           return;
         ++this._pauseCount;
         this._unlisten$0();
@@ -7104,7 +7058,7 @@
         return this._pauseCount > 0;
       },
       resume$0: function() {
-        if (this._html$_target == null || this._pauseCount <= 0)
+        if (this._target == null || this._pauseCount <= 0)
           return;
         --this._pauseCount;
         this._tryResume$0();
@@ -7114,7 +7068,7 @@
         t1 = this._onData;
         t2 = t1 != null;
         if (t2 && this._pauseCount <= 0) {
-          t3 = this._html$_target;
+          t3 = this._target;
           t3.toString;
           if (t2)
             J._addEventListener$3$x(t3, this._eventType, t1, false);
@@ -7125,29 +7079,12 @@
         t1 = this._onData;
         t2 = t1 != null;
         if (t2) {
-          t3 = this._html$_target;
+          t3 = this._target;
           t3.toString;
           if (t2)
             J._removeEventListener$3$x(t3, this._eventType, t1, false);
         }
-      },
-      _EventStreamSubscription$4: function(_target, _eventType, onData, _useCapture, $T) {
-        this._tryResume$0();
-      },
-      static: {
-        _EventStreamSubscription$: function(_target, _eventType, onData, _useCapture, $T) {
-          var t1 = onData == null ? null : W._wrapZone(new W._EventStreamSubscription_closure(onData));
-          t1 = new W._EventStreamSubscription(0, _target, _eventType, t1, false, [$T]);
-          t1._EventStreamSubscription$4(_target, _eventType, onData, false, $T);
-          return t1;
-        }
       }
-    },
-    _EventStreamSubscription_closure: {
-      "^": "Closure:2;onData",
-      call$1: [function(e) {
-        return this.onData.call$1(e);
-      }, null, null, 2, 0, null, 4, "call"]
     }
   }], ["html_common", "dart:html_common",, P, {
     "^": "",
@@ -7767,7 +7704,7 @@
         this.video = t1;
         J.set$autoplay$x(t1, true);
         t1 = J.get$onPlay$x(this.video);
-        W._EventStreamSubscription$(t1._html$_target, t1._eventType, new X.RPPT_closure(this), false, H.getTypeArgumentByIndex(t1, 0));
+        new W._EventStreamSubscription(0, t1._target, t1._eventType, W._wrapZone(new X.RPPT_closure(this)), false, [H.getTypeArgumentByIndex(t1, 0)])._tryResume$0();
       },
       static: {
         RPPT$: function() {
@@ -7780,10 +7717,10 @@
     },
     RPPT_closure: {
       "^": "Closure:2;$this",
-      call$1: function(e) {
+      call$1: [function(e) {
         var t1 = this.$this;
         t1.timer = P.Timer_Timer$periodic(C.Duration_100000, t1.get$refreshCanvas());
-      }
+      }, null, null, 2, 0, null, 4, "call"]
     },
     Scanner: {
       "^": "Object;image,w,h",
@@ -7852,7 +7789,7 @@
             return H.iae(t1);
           if (!(j < t1))
             break;
-          t1 = j % 2 === 0;
+          t1 = C.JSInt_methods.$mod(j, 2) === 0;
           k = t1 ? 0 : J.$sub$n(this.w, 1);
           t2 = this.w;
           if (typeof t2 !== "number")
@@ -7990,10 +7927,14 @@
       },
       dist$4: function(x, y, dx, dy) {
         var t1, k, t2, start, dist, changed;
-        t1 = J.$mul$ns(y, this.w);
+        t1 = this.w;
+        if (typeof y !== "number")
+          return y.$mul();
+        if (typeof t1 !== "number")
+          return H.iae(t1);
         if (typeof x !== "number")
           return H.iae(x);
-        k = t1 + x;
+        k = y * t1 + x;
         t1 = J.get$data$x(this.image);
         t2 = k * 4;
         if (t2 >>> 0 !== t2 || t2 >= t1.length)
@@ -8663,7 +8604,7 @@
   Isolate = Isolate.$finishIsolateConstructor(Isolate);
   $ = new Isolate();
   init.metadata = ["error", "stackTrace", null, "_", "e", "x", "value", "data", "o", "object", "sender", "closure", "isolate", "numberOfArguments", "arg1", "arg2", "arg3", "arg4", "each", "arg", "callback", "captureThis", "self", "arguments"];
-  init.types = [{func: 1}, {func: 1, v: true}, {func: 1, args: [,]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, v: true, args: [,], opt: [P.StackTrace]}, {func: 1, ret: P.String, args: [P.int]}, {func: 1, args: [P.String,,]}, {func: 1, args: [, P.String]}, {func: 1, args: [P.String]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, args: [,], opt: [,]}, {func: 1, v: true, args: [, P.StackTrace]}, {func: 1, args: [,,]}, {func: 1, args: [P.Symbol0,,]}, {func: 1, v: true, args: [P.Timer]}, {func: 1, v: true, args: [,]}, {func: 1, ret: P.Object, args: [,]}];
+  init.types = [{func: 1}, {func: 1, v: true}, {func: 1, args: [,]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, v: true, args: [,], opt: [P.StackTrace]}, {func: 1, ret: P.String, args: [P.$int]}, {func: 1, args: [P.String,,]}, {func: 1, args: [, P.String]}, {func: 1, args: [P.String]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, args: [,], opt: [,]}, {func: 1, v: true, args: [, P.StackTrace]}, {func: 1, args: [,,]}, {func: 1, args: [P.Symbol0,,]}, {func: 1, v: true, args: [P.Timer]}, {func: 1, v: true, args: [,]}, {func: 1, ret: P.Object, args: [,]}];
   function convertToFastObject(properties) {
     function MyClass() {
     }
@@ -8720,8 +8661,6 @@
       prototype[fieldName] = sentinelUndefined;
       prototype[getterName] = function() {
         var result = this[fieldName];
-        if (result == sentinelInProgress)
-          H.throwCyclicInit(staticName || fieldName);
         try {
           if (result === sentinelUndefined) {
             this[fieldName] = sentinelInProgress;
@@ -8731,7 +8670,9 @@
               if (result === sentinelUndefined)
                 this[fieldName] = null;
             }
-          }
+          } else
+            if (result === sentinelInProgress)
+              H.throwCyclicInit(staticName || fieldName);
           return result;
         } finally {
           this[getterName] = function() {
