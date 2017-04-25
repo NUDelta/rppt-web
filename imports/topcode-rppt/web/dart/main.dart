@@ -47,7 +47,7 @@ RPPT rppt;
 
 
 void main() {
-  var timer = new Timer(new Duration(seconds: 5), () => rppt = new RPPT());
+  var timer = new Timer(new Duration(seconds: 3), () => rppt = new RPPT());
 }
 
 
@@ -68,6 +68,8 @@ class RPPT {
 
   var session = context['session'];
 
+  bool active = false;
+
   // topcode state flags
   bool kbPresent = false;
   bool camPresent = false;
@@ -77,7 +79,7 @@ class RPPT {
 
 
   RPPT() {
-    print('dart: timeout completed');
+    print("in main");
     CanvasElement canvas = querySelector("#video-canvas");
     ctx = canvas.getContext("2d");
     scanner = new Scanner();
@@ -88,6 +90,7 @@ class RPPT {
       timer = new Timer.periodic(const Duration(milliseconds : 100), refreshCanvas);
     });
   }
+
 
   void init() {
     CanvasElement canvas = querySelector("#video-canvas");
@@ -116,7 +119,6 @@ class RPPT {
  * Called 30 frames a second while the camera is on
  */
   void refreshCanvas(Timer timer) {
-
     // javascript will change this class name as a signal to dart to stop scanning
     if (video.className == "stopped") {
       timer.cancel();

@@ -22,12 +22,11 @@ var videoConstraints = {
 };
 
 
-setTimeout(function() {
-    console.log('timeout done');
-    video = document.querySelector("#video-stream");
-    video.onpause = stopVideo;  // allows dart to stop the video
-    document.querySelector("#camera-button").onclick = startStopVideo;
-  }, 2000);
+Template.cc.rendered = function videoSetup() {
+  video = document.querySelector("#video-stream");
+  video.onpause = stopVideo;  // allows dart to stop the video
+  document.querySelector("#camera-button").onclick = startStopVideo;
+};
 
 navigator.mediaDevices.enumerateDevices()
   .then(gotDevices)

@@ -7513,7 +7513,7 @@
   }], ["rppt", "main.dart",, X, {
     "^": "",
     main: [function() {
-      P.Timer_Timer(P.Duration$(0, 0, 0, 0, 0, 5), new X.main_closure());
+      P.Timer_Timer(P.Duration$(0, 0, 0, 0, 0, 3), new X.main_closure());
     }, "call$0", "main__main$closure", 0, 0, 1],
     Coordinates: {
       "^": "Object;x1,x2,y1,y2,radius"
@@ -7527,7 +7527,7 @@
       }
     },
     RPPT: {
-      "^": "Object;ctx,scanner,video,timer,codeDict,session,kbPresent,camPresent,photoPresent,mapPresent,callTransparency",
+      "^": "Object;ctx,scanner,video,timer,codeDict,session,active,kbPresent,camPresent,photoPresent,mapPresent,callTransparency",
       refreshCanvas$1: [function(timer) {
         var id, codes, t1, t2, _i, $top;
         if (this.video.className === "stopped") {
@@ -7691,7 +7691,6 @@
         P.print(cd);
       },
       RPPT$0: function() {
-        P.print("dart: timeout completed");
         var t1 = document;
         this.ctx = J.getContext$1$x(t1.querySelector("#video-canvas"), "2d");
         this.scanner = new X.Scanner(null, null, null);
@@ -7704,7 +7703,7 @@
       static: {
         RPPT$: function() {
           var t1 = new H.JsLinkedHashMap(0, null, null, null, null, null, 0, [null, null]);
-          t1 = new X.RPPT(null, null, null, null, t1, J.$index$asx($.$get$context(), "session"), false, false, false, false, true);
+          t1 = new X.RPPT(null, null, null, null, t1, J.$index$asx($.$get$context(), "session"), false, false, false, false, false, true);
           t1.RPPT$0();
           return t1;
         }
