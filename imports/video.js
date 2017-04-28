@@ -1,7 +1,3 @@
-/*
- * Tangible Spark
- */
-
 // ideally these would be auto-detected, but for now we'll hardcode
 const VIDEO_WIDTH = 1280; //1920;
 const VIDEO_HEIGHT = 720; //1080;
@@ -23,10 +19,13 @@ var videoConstraints = {
 
 
 Template.cc.rendered = function videoSetup() {
+  console.log('video setup');
   video = document.querySelector("#video-stream");
   video.onpause = stopVideo;  // allows dart to stop the video
   document.querySelector("#camera-button").onclick = startStopVideo;
+  dartTopcode(); // initiates topcode detection method
 };
+
 
 navigator.mediaDevices.enumerateDevices()
   .then(gotDevices)

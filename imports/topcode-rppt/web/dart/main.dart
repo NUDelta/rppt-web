@@ -46,8 +46,10 @@ RPPT rppt;
 
 
 
-void main() {
-  var timer = new Timer(new Duration(seconds: 3), () => rppt = new RPPT());
+main() {
+  context['dartTopcode'] = (){
+    rppt = new RPPT();
+  };
 }
 
 
@@ -67,6 +69,7 @@ class RPPT {
   var codeDict = new Map();
 
   var session = context['session'];
+  // var templateRendered = context['ccTemplateRendered'];
 
   bool active = false;
 

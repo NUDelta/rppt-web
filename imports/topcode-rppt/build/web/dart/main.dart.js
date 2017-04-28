@@ -6364,11 +6364,6 @@
       },
       abs$0: function(_) {
         return new P.Duration(Math.abs(this._duration));
-      },
-      static: {
-        Duration$: function(days, hours, microseconds, milliseconds, minutes, seconds) {
-          return new P.Duration(864e8 * days + 3600000000 * hours + 60000000 * minutes + 1000000 * seconds + 1000 * milliseconds + microseconds);
-        }
       }
     },
     Duration_toString_sixDigits: {
@@ -7513,18 +7508,16 @@
   }], ["rppt", "main.dart",, X, {
     "^": "",
     main: [function() {
-      P.Timer_Timer(P.Duration$(0, 0, 0, 0, 0, 3), new X.main_closure());
-    }, "call$0", "main__main$closure", 0, 0, 1],
+      J.$indexSet$ax($.$get$context(), "dartTopcode", new X.main_closure());
+    }, "call$0", "main__main$closure", 0, 0, 0],
     Coordinates: {
       "^": "Object;x1,x2,y1,y2,radius"
     },
     main_closure: {
       "^": "Closure:0;",
-      call$0: function() {
-        var t1 = X.RPPT$();
-        $.rppt = t1;
-        return t1;
-      }
+      call$0: [function() {
+        $.rppt = X.RPPT$();
+      }, null, null, 0, 0, null, "call"]
     },
     RPPT: {
       "^": "Object;ctx,scanner,video,timer,codeDict,session,active,kbPresent,camPresent,photoPresent,mapPresent,callTransparency",
@@ -7691,6 +7684,7 @@
         P.print(cd);
       },
       RPPT$0: function() {
+        P.print("in main");
         var t1 = document;
         this.ctx = J.getContext$1$x(t1.querySelector("#video-canvas"), "2d");
         this.scanner = new X.Scanner(null, null, null);
