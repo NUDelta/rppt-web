@@ -6364,11 +6364,6 @@
       },
       abs$0: function(_) {
         return new P.Duration(Math.abs(this._duration));
-      },
-      static: {
-        Duration$: function(days, hours, microseconds, milliseconds, minutes, seconds) {
-          return new P.Duration(864e8 * days + 3600000000 * hours + 60000000 * minutes + 1000000 * seconds + 1000 * milliseconds + microseconds);
-        }
       }
     },
     Duration_toString_sixDigits: {
@@ -7239,9 +7234,6 @@
         t1 = this._jsObject;
         t2 = args == null ? null : P.List_List$from(new H.MappedListIterable(args, P.js___convertToJS$closure(), [null, null]), true, null);
         return P._convertToDart(t1[method].apply(t1, t2));
-      },
-      callMethod$1: function(method) {
-        return this.callMethod$2(method, null);
       }
     },
     JsFunction: {
@@ -7516,21 +7508,19 @@
   }], ["rppt", "main.dart",, X, {
     "^": "",
     main: [function() {
-      P.Timer_Timer(P.Duration$(0, 0, 0, 0, 0, 5), new X.main_closure());
-    }, "call$0", "main__main$closure", 0, 0, 1],
+      J.$indexSet$ax($.$get$context(), "dartTopcode", new X.main_closure());
+    }, "call$0", "main__main$closure", 0, 0, 0],
     Coordinates: {
       "^": "Object;x1,x2,y1,y2,radius"
     },
     main_closure: {
       "^": "Closure:0;",
-      call$0: function() {
-        var t1 = X.RPPT$();
-        $.rppt = t1;
-        return t1;
-      }
+      call$0: [function() {
+        $.rppt = X.RPPT$();
+      }, null, null, 0, 0, null, "call"]
     },
     RPPT: {
-      "^": "Object;ctx,scanner,video,timer,codeDict,session,kbPresent,camPresent,photoPresent,mapPresent,callTransparency",
+      "^": "Object;ctx,scanner,video,timer,codeDict,session,active,kbPresent,camPresent,photoPresent,mapPresent,callTransparency",
       refreshCanvas$1: [function(timer) {
         var id, codes, t1, t2, _i, $top;
         if (this.video.className === "stopped") {
@@ -7617,7 +7607,7 @@
           J.$index$asx($.$get$context(), "Meteor").callMethod$2("call", ["hideKeyboard", this.session]);
           this.kbPresent = false;
         }
-        if (cd.containsKey$1(361)) {
+        if (cd.containsKey$1(331)) {
           if (cd.containsKey$1(331)) {
             P.print("call transparency");
             $.$get$context().callMethod$2("screenshot", [498.5, 145, 365, 509, 42, 15, 432, 554, "true"]);
@@ -7694,11 +7684,9 @@
         P.print(cd);
       },
       RPPT$0: function() {
-        var t1, canvas;
-        t1 = document;
-        canvas = t1.querySelector("#video-canvas");
-        P.print(canvas);
-        this.ctx = J.getContext$1$x(canvas, "2d");
+        P.print("in main");
+        var t1 = document;
+        this.ctx = J.getContext$1$x(t1.querySelector("#video-canvas"), "2d");
         this.scanner = new X.Scanner(null, null, null);
         t1 = t1.querySelector("#video-stream");
         this.video = t1;
@@ -7709,7 +7697,7 @@
       static: {
         RPPT$: function() {
           var t1 = new H.JsLinkedHashMap(0, null, null, null, null, null, 0, [null, null]);
-          t1 = new X.RPPT(null, null, null, null, t1, J.$index$asx($.$get$context(), "session"), false, false, false, false, true);
+          t1 = new X.RPPT(null, null, null, null, t1, J.$index$asx($.$get$context(), "session"), false, false, false, false, false, true);
           t1.RPPT$0();
           return t1;
         }

@@ -46,8 +46,10 @@ RPPT rppt;
 
 
 
-void main() {
-  var timer = new Timer(new Duration(seconds: 5), () => rppt = new RPPT());
+main() {
+  context['dartTopcode'] = (){
+    rppt = new RPPT();
+  };
 }
 
 
@@ -67,6 +69,9 @@ class RPPT {
   var codeDict = new Map();
 
   var session = context['session'];
+  // var templateRendered = context['ccTemplateRendered'];
+
+  bool active = false;
 
   // topcode state flags
   bool kbPresent = false;
@@ -77,8 +82,8 @@ class RPPT {
 
 
   RPPT() {
+    print("in main");
     CanvasElement canvas = querySelector("#video-canvas");
-    print(canvas);
     ctx = canvas.getContext("2d");
     scanner = new Scanner();
     video = querySelector("#video-stream");
@@ -88,6 +93,7 @@ class RPPT {
       timer = new Timer.periodic(const Duration(milliseconds : 100), refreshCanvas);
     });
   }
+
 
   void init() {
     CanvasElement canvas = querySelector("#video-canvas");
@@ -116,7 +122,6 @@ class RPPT {
  * Called 30 frames a second while the camera is on
  */
   void refreshCanvas(Timer timer) {
-
     // javascript will change this class name as a signal to dart to stop scanning
     if (video.className == "stopped") {
       timer.cancel();
