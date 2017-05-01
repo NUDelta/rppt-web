@@ -7607,7 +7607,7 @@
           J.$index$asx($.$get$context(), "Meteor").callMethod$2("call", ["hideKeyboard", this.session]);
           this.kbPresent = false;
         }
-        if (cd.containsKey$1(331)) {
+        if (cd.containsKey$1(361)) {
           if (cd.containsKey$1(331)) {
             P.print("call transparency");
             $.$get$context().callMethod$2("screenshot", [498.5, 145, 365, 509, 42, 15, 432, 554, "true"]);
