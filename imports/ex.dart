@@ -284,7 +284,7 @@ class RPPT {
       photoPresent = false;
     }
 
-    // <editor-fold desc="map">
+    // map
     // 157 – top L; 205 – top  R; 279 – bottom L; 327 – bottom R
     if (cd.containsKey(157) && cd.containsKey(205) && cd.containsKey(279) &&
         cd.containsKey(327)) {
@@ -315,6 +315,10 @@ class RPPT {
       print('hide map');
       context['Meteor'].callMethod('call', ['map', session, -999, -999, -999, -999]);
       mapPresent = false;
+    }
+    // if the MF code isn't on the screen we shouldn't be showing and overlay
+    if (!cd.containsKey(331)) {
+      print('remove ss');
     }
     // </editor-fold>
 

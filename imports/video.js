@@ -2,82 +2,119 @@
 const VIDEO_WIDTH = 1280; //1920;
 const VIDEO_HEIGHT = 720; //1080;
 
-var video;
-var stream;
-var deviceId;
+// topcodes corresponding to different elements
+// arrays correspond to [top left, top right, bottom left, bottom right]
+const codes = {
+  keyboard : 31,
+  camera : 361,
+  photo : [93, 155, 203, 271],
+  map : [157, 205, 279, 327],
+  cameraOverlay : 331,
+  photoOverlay : 421,
+  mapOverlay : 331,
+}
 
+// msgs sent to iOS for elements that should be on-screen
+var states = {
+  keyboard : false,
+  camera : false,
+  photo : false,
+  map : false, 
+  keyboardOverlay : false,
+  cameraOverlay : false,
+  photoOverlay : false,
+  mapOverlay: false, 
+}
 
-// constraints object used by getUserMedia
-var videoConstraints = {
-  audio: false,
-  video: {
-    deviceId: undefined,
-    width: {exact: VIDEO_WIDTH},
-    height: {exact: VIDEO_HEIGHT}
-  }
-};
-
+// all topcodes currently on screen and their properties
+codeDict = {}
 
 Template.cc.rendered = function videoSetup() {
-  console.log('video setup');
-  video = document.querySelector("#video-stream");
-  video.onpause = stopVideo;  // allows dart to stop the video
-  document.querySelector("#camera-button").onclick = startStopVideo;
-  dartTopcode(); // initiates topcode detection method
+  document.querySelector("#camera-button").onclick = function(){ TopCodes.startStopVideoScan('video-canvas'); };
+  // TODO: change button color based on state
 };
 
+TopCodes.setVideoFrameCallback("video-canvas", function(jsonString) {
 
-navigator.mediaDevices.enumerateDevices()
-  .then(gotDevices)
-  .catch(console.log("error enumerating devices."));
+  // TODO: add in scanning to initial page load
 
+  var json = JSON.parse(jsonString);
+  var topcodes = json.topcodes;
+  var ctx = document.querySelector("#video-canvas").getContext('2d');
 
-function startStopVideo() {
-  stream ? stopVideo() : startVideo();
-}
+  // reshape topcode representation
+  for (index in topcodes) {
+    topcode = topcodes[index];
 
-
-function stopVideo() {
-  if (stream) {
-    stream.getTracks().forEach(function (track) { track.stop(); })
-    video.className = "stopped";  // use this class name to communicate with dart
-    $('#camera-button').css('color', 'white');
-    stream = null;
-  }   
-}
-
-
-function startVideo() {
-  if (!stream) {
-    navigator.mediaDevices.getUserMedia(videoConstraints)
-      .then(function(mediaStream) {
-        video.width = VIDEO_WIDTH;
-        video.height = VIDEO_HEIGHT;
-        video.srcObject = mediaStream;
-        video.className = "started";  // use this class name to communicate with dart
-        stream = mediaStream;
-        $('#camera-button').css('color', 'red');
-      })
-
-      .catch(function (error) {
-        console.log('getUserMedia error!', error);
-      });
-  }
-}
-
-
-function gotDevices(deviceInfos) {
-  var camcount = 0;   //used for labeling if the device label is not enumerated
-  for (var i = 0; i !== deviceInfos.length; ++i) {
-    var deviceInfo = deviceInfos[i];
-    if (deviceInfo.kind === 'videoinput') {
-      console.log(deviceInfo.deviceId);
-      deviceId = deviceInfo.deviceId;
-      videoConstraints.video.deviceId = deviceId;
-      camcount++;
+    // just get the center of the code for now
+    codeDict[topcode.code] = {
+      x : topcode.x,
+      y : topcode.y, 
+      radius : topcode.radius
     }
   }
-  console.log("Found " + camcount + " cameras.");
-}
 
+  // TODO: remove from `codeDict` if no longer present
+
+  parseCodes(codeDict);
+});
+
+function parseCodes(codeDict) {
+
+  // TODO: 
+  //  - add in screenshots
+  //  - don't check every frame
+  //  - add a listener for changes in topcodes rather than blocking main thread
+
+  // find codes we care about
+  if (codes['keyboard'] in codeDict && 
+      !states['keyboard']) {
+    console.log("showing keyboard");
+    Meteor.call('showKeyboard', session);
+    states['keyboard'] = true;
+  } else if (!(codes['keyboard'] in codeDict) && 
+      states['keyboard']) {
+    console.log("hiding keyboard");
+    Meteor.call('hideKeyboard', session);
+    states['keyboard'] = false;
+  }
+
+  if (codes['camera'] in codeDict && 
+      !states['camera']) {
+    Meteor.call('showCamera', session);
+    states['camera'] = true;
+  } else if (!(codes['camera'] in codeDict) && 
+      states['camera']) {
+    Meteor.call('hideCamera', session);
+    states['camera'] = false;
+  }
+
+  // if ((codes['photo'][0] in codeDict ||
+  //     codes['photo'][1] in codeDict || 
+  //     codes['photo'][2] in codeDict || 
+  //     codes['photo'][3] in codeDict) && 
+  //     !states['photo']) {
+  //   // TODO: call `photo` with correct coordinates
+  //   // make sure the iOS side updates coordinates based on server call unless all read -999
+  //   states['photo'] = true;
+  //   // TODO: fix hide condition
+  // } else if (states['photo']) {
+  //   Meteor.call('photo', session, -999, -999, -999, -999);
+  //   states['photo'] = false;
+  // }
+
+  // if ((codes['map'][0] in codeDict ||
+  //     codes['map'][1] in codeDict ||
+  //     codes['map'][2] in codeDict || 
+  //     codes['map'][3] in codeDict) && 
+  //     !states['map']) {
+  //   // TODO: call `map` with correct coordinates
+  //   // make sure the iOS side updates coordinates based on server call unless all read -999
+  //   states['map'] = true;
+  //   // TODO: fix hide condition
+  // } else if (states['map']) {
+  //   Meteor.call('map', session, -999, -999, -999, -999);
+  //   states['map'] = false;
+  // }
+}
 

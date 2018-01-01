@@ -121,6 +121,7 @@ Meteor.methods({
     },
 
     showKeyboard: function(session) {
+        console.log("Calling `showKeyboard`");
         Messages.update({ session: session }, { $set: { keyboard: 'show'} });
     },
 
