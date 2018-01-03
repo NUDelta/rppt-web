@@ -26,9 +26,6 @@ var states = {
   mapOverlay: false, 
 }
 
-// all topcodes currently on screen and their properties
-codeDict = {}
-
 Template.cc.rendered = function videoSetup() {
   document.querySelector("#camera-button").onclick = function(){ TopCodes.startStopVideoScan('video-canvas'); };
   // TODO: change button color based on state
@@ -37,13 +34,19 @@ Template.cc.rendered = function videoSetup() {
 TopCodes.setVideoFrameCallback("video-canvas", function(jsonString) {
 
   // TODO: add in scanning to initial page load
+  // TODO: fix for unsteady detection
 
   var json = JSON.parse(jsonString);
   var topcodes = json.topcodes;
+
   var ctx = document.querySelector("#video-canvas").getContext('2d');
+
+  // all topcodes currently on screen and their properties
+  var codeDict = {}
 
   // reshape topcode representation
   for (index in topcodes) {
+
     topcode = topcodes[index];
 
     // just get the center of the code for now
@@ -54,9 +57,8 @@ TopCodes.setVideoFrameCallback("video-canvas", function(jsonString) {
     }
   }
 
-  // TODO: remove from `codeDict` if no longer present
+  parseCodes(codeDict); 
 
-  parseCodes(codeDict);
 });
 
 function parseCodes(codeDict) {
@@ -69,12 +71,10 @@ function parseCodes(codeDict) {
   // find codes we care about
   if (codes['keyboard'] in codeDict && 
       !states['keyboard']) {
-    console.log("showing keyboard");
     Meteor.call('showKeyboard', session);
     states['keyboard'] = true;
   } else if (!(codes['keyboard'] in codeDict) && 
       states['keyboard']) {
-    console.log("hiding keyboard");
     Meteor.call('hideKeyboard', session);
     states['keyboard'] = false;
   }
