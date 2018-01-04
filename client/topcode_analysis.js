@@ -2,6 +2,13 @@
 const VIDEO_WIDTH = 1280; //1920;
 const VIDEO_HEIGHT = 720; //1080;
 
+const IOS_WIDTH = 375;
+// with UINavBar and UIStatusBar
+const IOS_FULL_HEIGHT = 667;
+// without
+const IOS_VIEW_HEIGHT = 603;
+const IOS_TOP_PADDING = 64;
+
 // topcodes corresponding to different elements
 // arrays correspond to [top left, top right, bottom left, bottom right]
 const codes = {
@@ -92,12 +99,12 @@ function parseCodes(codeDict) {
 
     if (codes['cameraOverlay'] in codeDict) {
       console.log("overlay")
-      var screenshotWidth = (720 / 667) * 375;
-      var screenshotX = (1280 - screenshotWidth) / 2;
+      var screenshotWidth = (VIDEO_HEIGHT / IOS_FULL_HEIGHT) * IOS_WIDTH;
+      var screenshotX = (VIDEO_WIDTH - screenshotWidth) / 2;
 
       // Camera always takes up the whole screen on iOS, so send everything in the interface region
       // Picker doesn't include UINavBar or UIStatusBar
-      screenshot(screenshotX, 0, screenshotWidth, 720, 0, 0, 375, 667, "cameraOverlay", "true");
+      screenshot(screenshotX, 0, screenshotWidth, VIDEO_HEIGHT, 0, 0, IOS_WIDTH, IOS_FULL_HEIGHT, "cameraOverlay", "true");
     }
 
   } else if (!(codes['camera'] in codeDict) && 
@@ -138,7 +145,7 @@ function parseCodes(codeDict) {
       var screenshotIOSCoordinates = transformCoordinates([screenshotX, screenshotY, screenshotWidth, screenshotHeight]);
 
       // Reflect x since the image data is not mirrored (& publisher stream is)
-      var reflectionAxis = 1280 / 2;
+      var reflectionAxis = VIDEO_WIDTH / 2;
       screenshotX = reflectionAxis - (screenshotX - reflectionAxis)
 
       if (screenshotIOSCoordinates) {
@@ -187,7 +194,7 @@ function parseCodes(codeDict) {
       var screenshotIOSCoordinates = transformCoordinates([screenshotX, screenshotY, screenshotWidth, screenshotHeight]);
 
       // Reflect x since the image data is not mirrored (& publisher stream is)
-      var reflectionAxis = 1280 / 2;
+      var reflectionAxis = VIDEO_WIDTH / 2;
       screenshotX = reflectionAxis - (screenshotX - reflectionAxis)
 
       if (screenshotIOSCoordinates) {
@@ -233,7 +240,7 @@ function transformCoordinates(coordinates) {
   // iOS subscriber stream dimensions: [0, 64, 375, 603]
 
   // the stream size adjusts to the height of the iOS client
-  var scale = 603 / 720
+  var scale = IOS_VIEW_HEIGHT / VIDEO_HEIGHT
 
   // coordinates from video-canvas
   var scaledX = coordinates[0] * scale;
@@ -242,20 +249,19 @@ function transformCoordinates(coordinates) {
   var scaledHeight = coordinates[3] * scale;
 
   // first, scale web stream, reflection line, and x = 0 for iOS
-  var webStreamWidth = 1280 * scale
+  var webStreamWidth = VIDEO_WIDTH * scale
   var reflectionAxis = webStreamWidth / 2
-  var webXForiOS0 = (webStreamWidth - 375) / 2
+  var webXForiOS0 = (webStreamWidth - IOS_WIDTH) / 2
 
   // second, reflect for iOS transform
   var reflectedX = reflectionAxis - (scaledX - reflectionAxis)
 
   // finally, translate x and y
   var iOSX = reflectedX - webXForiOS0;
-  // UIStatusBar + UINavigationBar = 64
-  var iOSY = scaledY + 64;
+  var iOSY = scaledY + IOS_TOP_PADDING;
 
   // only return coords if element is in bounds
-  if (iOSX > 0 && (iOSX + scaledWidth) < 375 && iOSY > 64 && (iOSY + scaledHeight) < 667) {
+  if (iOSX > 0 && (iOSX + scaledWidth) < IOS_WIDTH && iOSY > IOS_TOP_PADDING && (iOSY + scaledHeight) < IOS_FULL_HEIGHT) {
     return [iOSX, iOSY, scaledWidth, scaledHeight];
   }
 
