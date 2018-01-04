@@ -69,22 +69,43 @@ function parseCodes(codeDict) {
   // find codes we care about
   if (codes['keyboard'] in codeDict && 
       !states['keyboard']) {
+
     Meteor.call('showKeyboard', session);
     states['keyboard'] = true;
+
   } else if (!(codes['keyboard'] in codeDict) && 
       states['keyboard']) {
+
     Meteor.call('hideKeyboard', session);
     states['keyboard'] = false;
+
   }
 
-  if (codes['camera'] in codeDict && 
-      !states['camera']) {
-    Meteor.call('showCamera', session);
-    states['camera'] = true;
+  if (codes['camera'] in codeDict) {
+
+    console.log("in camera")
+
+    if (!states['camera']) {
+      Meteor.call('showCamera', session);
+      states['camera'] = true;
+    }
+
+    if (codes['cameraOverlay'] in codeDict) {
+      console.log("overlay")
+      var screenshotWidth = (720 / 667) * 375;
+      var screenshotX = (1280 - screenshotWidth) / 2;
+
+      // Camera always takes up the whole screen on iOS, so send everything in the interface region
+      // Picker doesn't include UINavBar or UIStatusBar
+      screenshot(screenshotX, 0, screenshotWidth, 720, 0, 0, 375, 667, "cameraOverlay", "true");
+    }
+
   } else if (!(codes['camera'] in codeDict) && 
       states['camera']) {
+
     Meteor.call('hideCamera', session);
     states['camera'] = false;
+
   }
 
   if ((codes['photo'][0] in codeDict &&
@@ -197,6 +218,13 @@ function parseCodes(codeDict) {
     states['photoOverlay'] = false;
   }
 
+  if (!(codes['cameraOverlay'] in codeDict) && 
+      states['cameraOverlay']) {
+    console.log("hiding overlay")
+    Meteor.call('sendOverlay', session, -999, -999, -999, -999, "", "true");
+    states['cameraOverlay'] = false;
+  }
+
 }
 
 // send top left x and y in web stream, height, and width
@@ -288,4 +316,3 @@ function sendToiPhone(canvas, x_ios, y_ios, width_ios, height_ios, overlayType, 
   Meteor.call('sendOverlay', session, x_ios, y_ios, width_ios, height_ios, encodedImage, isCameraOverlay);
   states[overlayType] = true;
 }
-
