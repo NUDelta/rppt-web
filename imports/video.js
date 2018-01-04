@@ -107,6 +107,26 @@ function parseCodes(codeDict) {
       states['photo'] = true;
     }
 
+    if (codes['photoOverlay'] in codeDict) {
+      // Topcodes are detected in the mirrored publisher stream
+      var screenshotX = codeDict[codes['photo'][0]].x - codeDict[codes['photo'][0]].radius;
+      var screenshotY = codeDict[codes['photo'][0]].y + codeDict[codes['photo'][0]].radius;
+      var screenshotWidth =  screenshotX - (codeDict[codes['photo'][1]].x + codeDict[codes['photo'][1]].radius);
+      var screenshotHeight = (codeDict[codes['photo'][2]].y - codeDict[codes['photo'][2]].radius) - screenshotY;
+
+      var screenshotIOSCoordinates = transformCoordinates([screenshotX, screenshotY, screenshotWidth, screenshotHeight]);
+
+      // Reflect x since the image data is not mirrored (& publisher stream is)
+      var reflectionAxis = 1280 / 2;
+      screenshotX = reflectionAxis - (screenshotX - reflectionAxis)
+
+      if (screenshotIOSCoordinates) {
+        screenshot(screenshotX, screenshotY, screenshotWidth, screenshotHeight, screenshotIOSCoordinates[0], screenshotIOSCoordinates[1], screenshotIOSCoordinates[2], screenshotIOSCoordinates[3], "photoOverlay", "false");
+      }
+
+    }
+
+
   } else if (!(codes['photo'][0] in codeDict ||
       codes['photo'][1] in codeDict ||
       codes['photo'][2] in codeDict ||
@@ -150,7 +170,7 @@ function parseCodes(codeDict) {
       screenshotX = reflectionAxis - (screenshotX - reflectionAxis)
 
       if (screenshotIOSCoordinates) {
-        screenshot(screenshotX, screenshotY, screenshotWidth, screenshotHeight, screenshotIOSCoordinates[0], screenshotIOSCoordinates[1], screenshotIOSCoordinates[2], screenshotIOSCoordinates[3], "false");
+        screenshot(screenshotX, screenshotY, screenshotWidth, screenshotHeight, screenshotIOSCoordinates[0], screenshotIOSCoordinates[1], screenshotIOSCoordinates[2], screenshotIOSCoordinates[3], "mapOverlay", "false");
       }
 
     }
@@ -169,6 +189,12 @@ function parseCodes(codeDict) {
       states['mapOverlay']) {
     Meteor.call('sendOverlay', session, -999, -999, -999, -999, "", "false");
     states['mapOverlay'] = false;
+  }
+
+  if (!(codes['photoOverlay'] in codeDict) && 
+      states['photoOverlay']) {
+    Meteor.call('sendOverlay', session, -999, -999, -999, -999, "", "false");
+    states['photoOverlay'] = false;
   }
 
 }
@@ -208,7 +234,7 @@ function transformCoordinates(coordinates) {
 }
 
 // change to arrays
-function screenshot(x, y, width, height, x_ios, y_ios, width_ios, height_ios, isCameraOverlay) {
+function screenshot(x, y, width, height, x_ios, y_ios, width_ios, height_ios, overlayType, isCameraOverlay) {
   const data = publisher.getImgData();
   const canvas = document.createElement('canvas');
   // canvas.style.background = 'orange';
@@ -218,7 +244,7 @@ function screenshot(x, y, width, height, x_ios, y_ios, width_ios, height_ios, is
   paper.appendChild(img);
   img.onload = function() {
     whiteToTransparent(canvas, img, x, y, width, height, function(canvas) {
-      sendToiPhone(canvas, x_ios, y_ios, width_ios, height_ios, isCameraOverlay)
+      sendToiPhone(canvas, x_ios, y_ios, width_ios, height_ios, overlayType, isCameraOverlay)
     });
   };
 };
@@ -253,13 +279,13 @@ function whiteToTransparent(canvas, img, x, y, width, height, callback) {
   callback(canvas);
 }
 
-function sendToiPhone(canvas, x_ios, y_ios, width_ios, height_ios, isCameraOverlay) {
+function sendToiPhone(canvas, x_ios, y_ios, width_ios, height_ios, overlayType, isCameraOverlay) {
   const encodedImage = canvas.toDataURL().replace('data:image/png;base64,', '');
   const img = document.createElement('img');
   img.src = `data:image/png;base64,${ encodedImage}`;
   const paper = document.getElementById('paper');
   paper.appendChild(img);
   Meteor.call('sendOverlay', session, x_ios, y_ios, width_ios, height_ios, encodedImage, isCameraOverlay);
-  states['mapOverlay'] = true;
+  states[overlayType] = true;
 }
 
