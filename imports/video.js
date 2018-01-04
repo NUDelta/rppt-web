@@ -102,9 +102,9 @@ function parseCodes(codeDict) {
     var iOSCoordinates = transformCoordinates([x, y, width, height]);
 
     if (iOSCoordinates) {
-      states['photo'] = true;
       // TODO: fix order in server call
       Meteor.call('photo', session, iOSCoordinates[0], iOSCoordinates[1], iOSCoordinates[3], iOSCoordinates[2]);
+      states['photo'] = true;
     }
 
   } else if (!(codes['photo'][0] in codeDict ||
@@ -131,9 +131,9 @@ function parseCodes(codeDict) {
     var iOSCoordinates = transformCoordinates([x, y, width, height]);  
 
     if (iOSCoordinates) {
-      states['map'] = true;
       // TODO: fix order in server call
       Meteor.call('map', session, iOSCoordinates[0], iOSCoordinates[1], iOSCoordinates[3], iOSCoordinates[2]);
+      states['map'] = true;
     }
 
     if (codes['mapOverlay'] in codeDict) {
@@ -162,6 +162,13 @@ function parseCodes(codeDict) {
       states['map']) {
     Meteor.call('map', session, -999, -999, -999, -999);
     states['map'] = false;
+  }
+
+  // remove overlays w/o appr code regardless if native elements are on screen
+  if (!(codes['mapOverlay'] in codeDict) && 
+      states['mapOverlay']) {
+    Meteor.call('sendOverlay', session, -999, -999, -999, -999, "", "false");
+    states['mapOverlay'] = false;
   }
 
 }
@@ -253,5 +260,6 @@ function sendToiPhone(canvas, x_ios, y_ios, width_ios, height_ios, isCameraOverl
   const paper = document.getElementById('paper');
   paper.appendChild(img);
   Meteor.call('sendOverlay', session, x_ios, y_ios, width_ios, height_ios, encodedImage, isCameraOverlay);
+  states['mapOverlay'] = true;
 }
 
