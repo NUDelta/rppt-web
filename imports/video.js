@@ -92,25 +92,27 @@ function parseCodes(codeDict) {
       codes['photo'][2] in codeDict &&
       codes['photo'][3] in codeDict) &&
       !states['photo']) {
-    console.log("detected photo");
 
     // TODO: add in algorithm to include bottom right code & make shape more stable
-    var x = codeDict[codes['photo'][0]].x - codeDict[codes['photo'][0]].radius;
+    // publisher is mirrored
+    var x = codeDict[codes['photo'][0]].x + codeDict[codes['photo'][0]].radius;
     var y = codeDict[codes['photo'][0]].y - codeDict[codes['photo'][0]].radius;
-    var width = (codeDict[codes['photo'][1]].x + codeDict[codes['photo'][1]].radius) - x;
+    var width = x - (codeDict[codes['photo'][1]].x - codeDict[codes['photo'][1]].radius);
     var height = (codeDict[codes['photo'][2]].y + codeDict[codes['photo'][2]].radius) - y;
 
     var iOSCoordinates = transformCoordinates([x, y, width, height]);
 
-    Meteor.call('photo', session, iOSCoordinates[0], iOSCoordinates[1], iOSCoordinates[2], iOSCoordinates[3]);
-    // make sure the iOS side updates coordinates based on server call unless all read -999
-    states['photo'] = true;
+    if (iOSCoordinates) {
+      states['photo'] = true;
+      // TODO: fix order in server call
+      Meteor.call('photo', session, iOSCoordinates[0], iOSCoordinates[1], iOSCoordinates[3], iOSCoordinates[2]);
+      // TODO: keep sending server calls updating coordinates for iOS client
+    }
   } else if (!(codes['photo'][0] in codeDict ||
       codes['photo'][1] in codeDict ||
       codes['photo'][2] in codeDict ||
       codes['photo'][3] in codeDict) &&
       states['photo']) {
-    console.log("hiding photo");
     Meteor.call('photo', session, -999, -999, -999, -999);
     states['photo'] = false;
   }
