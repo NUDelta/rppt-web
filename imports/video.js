@@ -90,8 +90,7 @@ function parseCodes(codeDict) {
   if ((codes['photo'][0] in codeDict &&
       codes['photo'][1] in codeDict &&
       codes['photo'][2] in codeDict &&
-      codes['photo'][3] in codeDict) &&
-      !states['photo']) {
+      codes['photo'][3] in codeDict) {
 
     // TODO: add in algorithm to include bottom right code & make shape more stable
     // publisher is mirrored
@@ -106,8 +105,8 @@ function parseCodes(codeDict) {
       states['photo'] = true;
       // TODO: fix order in server call
       Meteor.call('photo', session, iOSCoordinates[0], iOSCoordinates[1], iOSCoordinates[3], iOSCoordinates[2]);
-      // TODO: keep sending server calls updating coordinates for iOS client
     }
+
   } else if (!(codes['photo'][0] in codeDict ||
       codes['photo'][1] in codeDict ||
       codes['photo'][2] in codeDict ||
@@ -120,8 +119,7 @@ function parseCodes(codeDict) {
   if ((codes['map'][0] in codeDict &&
       codes['map'][1] in codeDict &&
       codes['map'][2] in codeDict &&
-      codes['map'][3] in codeDict) &&
-      !states['map']) {
+      codes['map'][3] in codeDict)) {
 
     // TODO: add in algorithm to include bottom right code & make shape more stable
     // publisher is mirrored
@@ -136,17 +134,17 @@ function parseCodes(codeDict) {
       states['map'] = true;
       // TODO: fix order in server call
       Meteor.call('map', session, iOSCoordinates[0], iOSCoordinates[1], iOSCoordinates[3], iOSCoordinates[2]);
-      // TODO: keep sending server calls updating coordinates for iOS client
     }
+
   } else if (!(codes['map'][0] in codeDict ||
       codes['map'][1] in codeDict ||
       codes['map'][2] in codeDict ||
       codes['map'][3] in codeDict) &&
       states['map']) {
-    console.log("hiding map");
     Meteor.call('map', session, -999, -999, -999, -999);
     states['map'] = false;
   }
+
 }
 
 function transformCoordinates(coordinates) {
