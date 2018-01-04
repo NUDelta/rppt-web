@@ -90,7 +90,7 @@ function parseCodes(codeDict) {
   if ((codes['photo'][0] in codeDict &&
       codes['photo'][1] in codeDict &&
       codes['photo'][2] in codeDict &&
-      codes['photo'][3] in codeDict) {
+      codes['photo'][3] in codeDict)) {
 
     // TODO: add in algorithm to include bottom right code & make shape more stable
     // publisher is mirrored
@@ -136,6 +136,25 @@ function parseCodes(codeDict) {
       Meteor.call('map', session, iOSCoordinates[0], iOSCoordinates[1], iOSCoordinates[3], iOSCoordinates[2]);
     }
 
+    if (codes['mapOverlay'] in codeDict) {
+      // Topcodes are detected in the mirrored publisher stream
+      var screenshotX = codeDict[codes['map'][0]].x - codeDict[codes['map'][0]].radius;
+      var screenshotY = codeDict[codes['map'][0]].y + codeDict[codes['map'][0]].radius;
+      var screenshotWidth =  screenshotX - (codeDict[codes['map'][1]].x + codeDict[codes['map'][1]].radius);
+      var screenshotHeight = (codeDict[codes['map'][2]].y - codeDict[codes['map'][2]].radius) - screenshotY;
+
+      var screenshotIOSCoordinates = transformCoordinates([screenshotX, screenshotY, screenshotWidth, screenshotHeight]);
+
+      // Reflect x since the image data is not mirrored (& publisher stream is)
+      var reflectionAxis = 1280 / 2;
+      screenshotX = reflectionAxis - (screenshotX - reflectionAxis)
+
+      if (screenshotIOSCoordinates) {
+        screenshot(screenshotX, screenshotY, screenshotWidth, screenshotHeight, screenshotIOSCoordinates[0], screenshotIOSCoordinates[1], screenshotIOSCoordinates[2], screenshotIOSCoordinates[3], "false");
+      }
+
+    }
+
   } else if (!(codes['map'][0] in codeDict ||
       codes['map'][1] in codeDict ||
       codes['map'][2] in codeDict ||
@@ -147,6 +166,7 @@ function parseCodes(codeDict) {
 
 }
 
+// send top left x and y in web stream, height, and width
 function transformCoordinates(coordinates) {
   // publisher stream dimensions: [0, 0, 1280, 720]
   // iOS subscriber stream dimensions: [0, 64, 375, 603]
@@ -178,5 +198,60 @@ function transformCoordinates(coordinates) {
     return [iOSX, iOSY, scaledWidth, scaledHeight];
   }
 
+}
+
+// change to arrays
+function screenshot(x, y, width, height, x_ios, y_ios, width_ios, height_ios, isCameraOverlay) {
+  const data = publisher.getImgData();
+  const canvas = document.createElement('canvas');
+  // canvas.style.background = 'orange';
+  const img = document.createElement("img");
+  img.src = 'data:image/png;base64,' + data;
+  const paper = document.getElementById('paper');
+  paper.appendChild(img);
+  img.onload = function() {
+    whiteToTransparent(canvas, img, x, y, width, height, function(canvas) {
+      sendToiPhone(canvas, x_ios, y_ios, width_ios, height_ios, isCameraOverlay)
+    });
+  };
+};
+
+function whiteToTransparent(canvas, img, x, y, width, height, callback) {
+  canvas.width = img.offsetWidth;
+  canvas.height = img.offsetHeight;
+
+  const ctx = canvas.getContext('2d');
+  // TODO: change to an image bitmap
+  ctx.drawImage(img, 0, 0);
+
+  var imageData = ctx.getImageData(x, y, width, height);
+
+  for (let i = 0; i < imageData.data.length; i += 4) {
+    //if it's white, turn it transparent
+    const threshold = 100;
+    // what are these things
+    if (imageData.data[i] > threshold && imageData.data[i+1] > threshold && imageData.data[i+2] > threshold) {
+        imageData.data[i+3] = 0;
+      }
+  }
+
+  // clear canvas for redrawing
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  canvas.height = height;
+  canvas.width = width;
+
+  //ctx should automatically update since its passed by referenced
+  ctx.putImageData(imageData, 0, 0);
+  callback(canvas);
+}
+
+function sendToiPhone(canvas, x_ios, y_ios, width_ios, height_ios, isCameraOverlay) {
+  const encodedImage = canvas.toDataURL().replace('data:image/png;base64,', '');
+  const img = document.createElement('img');
+  img.src = `data:image/png;base64,${ encodedImage}`;
+  const paper = document.getElementById('paper');
+  paper.appendChild(img);
+  Meteor.call('sendOverlay', session, x_ios, y_ios, width_ios, height_ios, encodedImage, isCameraOverlay);
 }
 
