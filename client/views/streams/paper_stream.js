@@ -6,7 +6,12 @@ Template.paperStream.rendered = function () {
     } else {
       let stream = OT.initSession(cred.key, cred.stream);
       stream.connect(cred.token, function(err) {
-        publisher = OT.initPublisher('publisher');
+        // make publisher element on cc same dimensions as camera stream
+        var properties = {
+          width : 256,
+          height : 144
+        };
+        publisher = OT.initPublisher('publisher', properties);
         stream.publish(publisher);
       });
       Meteor.call('webCreateStream', session, 'subscriber', function(err, cred) {
@@ -17,8 +22,8 @@ Template.paperStream.rendered = function () {
             stream.connect(cred.token);
             stream.on("streamCreated", function(event) {
               let properties = {
-                  height: 550,
-                  width: 320,
+                  width: 375,
+                  height: 667,
                   name: 'iPhone Stream',
                   mirror: false,
                   style: {
